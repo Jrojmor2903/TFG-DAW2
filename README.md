@@ -1,7 +1,7 @@
 # Nombre del Proyecto
 
 ## 1. Autor del Proyecto
-
+    
 ## 2. Título y Temática
 
 ## 3. Objetivos y Descripción General
