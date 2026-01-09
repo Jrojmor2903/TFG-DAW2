@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  laravel:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: laravel-app
+    networks:
+      - app-network
+    depends_on:
+      - db
+    # No exponemos puerto → solo accesible internamente
+
+  react:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: react-app
+    ports:
+      - "5173:5173"
+    networks:
+      - app-network
+    environment:
+      - VITE_API_URL=http://laravel:80/api
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: pAss5678?
+      MYSQL_DATABASE: tfg_db
+      MYSQL_USER: usuario1234
+      MYSQL_PASSWORD: pAss1234?
+    networks:
+      - app-network
+    volumes:
+      - db_tfg:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: db
+      PMA_USER: usuario1234
+      PMA_PASSWORD: pAss1234?
+    ports:
+      - "8081:80"
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+volumes:
+  db_tfg:
+
+networks:
+  app-network:
+    driver: bridge
