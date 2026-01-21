@@ -1,51 +1,65 @@
 version: "3.9"
 
 services:
-  laravel:
+  backend:
     build:
       context: .
       dockerfile: docker/Dockerfile.backend
     container_name: laravel-app
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8000:80"
     networks:
-      - app-network
+      - tfg-network
     depends_on:
       - db
-    # No exponemos puerto → solo accesible internamente
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: tfg_db
+      DB_USERNAME: usuario1234
+      DB_PASSWORD: pAss1234?
 
-  react:
+  frontend:
     build:
       context: .
       dockerfile: docker/Dockerfile.frontend
     container_name: react-app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     ports:
       - "5173:5173"
     networks:
-      - app-network
+      - tfg-network
     environment:
-      - VITE_API_URL=http://laravel:80/api
+      VITE_API_URL: http://localhost:8000/api
 
   db:
     image: mysql:8.0
+    container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: pAss5678?
       MYSQL_DATABASE: tfg_db
       MYSQL_USER: usuario1234
       MYSQL_PASSWORD: pAss1234?
-    networks:
-      - app-network
     volumes:
       - db_tfg:/var/lib/mysql
+    networks:
+      - tfg-network
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
     environment:
       PMA_HOST: db
       PMA_USER: usuario1234
       PMA_PASSWORD: pAss1234?
-    ports:
-      - "8081:80"
     networks:
-      - app-network
+      - tfg-network
     depends_on:
       - db
 
@@ -53,5 +67,5 @@ volumes:
   db_tfg:
 
 networks:
-  app-network:
+  tfg-network:
     driver: bridge
