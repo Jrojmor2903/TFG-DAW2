@@ -10,14 +10,11 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Campos extra según tu diagrama
-            $table->string('nombre_usuario')->after('id');
-            $table->timestamp('fecha_registro')->useCurrent()->after('password');
-            $table->string('avatar_url')->nullable()->after('fecha_registro');
+            $table->string('avatar_url')->nullable();
             $table->integer('nivel_actual')->default(1)->after('avatar_url');
             $table->unsignedBigInteger('id_rol')->after('nivel_actual');
-
             // FK relación con roles
-            $table->foreign('id_rol')->references('id_rol')->on('roles')->onDelete('cascade');
+            $table->foreign('id_rol')->references('id_rol')->on('roles');
         });
     }
 

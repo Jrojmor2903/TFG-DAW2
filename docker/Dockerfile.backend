@@ -14,9 +14,23 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+# Copia el código de Laravel
+COPY ./backend /var/www/html
+
+COPY ./docker/laravel.conf /etc/apache2/sites-available/000-default.conf
+
+# Da permisos al usuario de Apache (www-data) para que pueda leer todo el código
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+# Permite escritura a Laravel en storage y bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Entrypoint
 COPY docker/entrypoint.backend.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+
 
 EXPOSE 80
 

@@ -32,10 +32,38 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
+    expose:
+      - "5173"
     networks:
       - tfg-network
     environment:
       VITE_API_URL: http://localhost:8000/api
+
+  ngrok-react:
+    image: ngrok/ngrok:latest
+    container_name: react-ngrok
+    command: http frontend:5173
+    environment:
+      NGROK_AUTHTOKEN: "${TOKEN_REACT_2903}"
+    networks:
+      - tfg-network
+    depends_on:
+      - frontend
+    ports:
+      - "4040:4040"
+
+  ngrok-laravel:
+    image: ngrok/ngrok:latest
+    container_name: laravel-ngrok
+    command: http backend:80
+    environment:
+      NGROK_AUTHTOKEN: "${TOKEN_LARAVEL_159}"
+    networks:
+      - tfg-network
+    depends_on:
+      - backend
+    ports:
+      - "4041:4040"
 
   db:
     image: mysql:8.0

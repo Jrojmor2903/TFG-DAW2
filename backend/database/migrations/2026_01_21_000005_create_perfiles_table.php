@@ -9,17 +9,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('perfiles', function (Blueprint $table) {
-            $table->id('id_perfil');           // PK
-            $table->unsignedBigInteger('id_usuario')->unique(); // 1:1
+            $table->id();
+
+            $table->unsignedBigInteger('id_usuario')->unique();
+
             $table->string('idioma')->default('es');
-            $table->string('tema_visual')->default('claro');
+            $table->string('tema_visual')->default('default');
             $table->boolean('sonido')->default(true);
             $table->string('dificultad')->default('normal');
 
             $table->timestamps();
 
-            // FK relación 1:1 con usuarios
-            $table->foreign('id_usuario')->references('id_usuario')->on('usuarios')->onDelete('cascade');
+            $table->foreign('id_usuario')
+                ->references('id')
+                ->on('users');
         });
     }
 

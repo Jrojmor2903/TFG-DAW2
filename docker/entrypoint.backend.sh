@@ -19,7 +19,11 @@ if [ "$(php -r "echo getenv('CACHE_STORE');")" = "database" ]; then
 fi
 
 # Migraciones automáticas
-php artisan migrate --force
+php artisan db:wipe --force || true
+
+echo "⚠️ Ejecutando migrate:fresh"
+php artisan migrate:fresh --force || exit 1
+echo "✅ migrate:fresh terminado"
 
 # Limpiar cache
 php artisan optimize:clear
