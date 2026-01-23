@@ -12,8 +12,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_rol');
             $table->unsignedBigInteger('id_permiso');
 
-            $table->foreign('id_rol')->references('id_rol')->on('roles')->cascadeOnDelete();
-            $table->foreign('id_permiso')->references('id_permiso')->on('permisos')->cascadeOnDelete();
+            $table->foreign('id_rol')->references('id_rol')->on('roles');
+            $table->foreign('id_permiso')->references('id_permiso')->on('permisos');
 
             $table->primary(['id_rol', 'id_permiso']);
         });

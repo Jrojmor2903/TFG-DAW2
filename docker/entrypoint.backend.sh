@@ -21,9 +21,9 @@ fi
 # Migraciones automáticas
 php artisan db:wipe --force || true
 
-echo "⚠️ Ejecutando migrate:fresh"
-php artisan migrate:fresh --force || exit 1
-echo "✅ migrate:fresh terminado"
+echo "⚠️ Ejecutando migrate"
+php artisan migrate --force || exit 1
+echo "✅ migrate terminado"
 
 # Limpiar cache
 php artisan optimize:clear
