@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedbigInteger('id_usuario');
             $table->bigInteger('puntuacion');
-            $table->integer('posicion');
             $table->timestamp('fecha_partida')->nullable()->useCurrent();
 
             $table->foreign('id_usuario')->references('id')->on('users');

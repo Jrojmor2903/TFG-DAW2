@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->integer('vida')->default(100);
             $table->integer('daño')->default(10);
             $table->integer('puntos')->default(0);
-
+            $table->string('imagen_url')->nullable();
             $table->unsignedBigInteger('creado_por')->nullable();
             $table->foreign('creado_por')
                   ->references('id')

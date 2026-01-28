@@ -7,11 +7,10 @@ return new class extends Migration {
     public function up()
     {
         DB::statement("
-            CREATE VIEW ranking_view AS
+            CREATE OR REPLACE VIEW ranking_view AS
             SELECT
                 id,
                 id_usuario,
-                puntuacion,
                 fecha_partida,
                 ROW_NUMBER() OVER (
                     ORDER BY puntuacion DESC, fecha_partida ASC
@@ -19,7 +18,6 @@ return new class extends Migration {
             FROM rankings
         ");
     }
-
     public function down()
     {
         DB::statement("DROP VIEW IF EXISTS ranking_view");
