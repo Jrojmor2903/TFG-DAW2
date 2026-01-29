@@ -7,27 +7,26 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('niveles_enemigos', function (Blueprint $table) {
+        Schema::create('escalados', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('id_nivel');
             $table->unsignedBigInteger('id_enemigo');
             $table->integer('cantidad')->default(1);
 
-            // PK compuesta
-            $table->primary(['id_nivel', 'id_enemigo']);
+            $table->unique(['id_nivel', 'id_enemigo']);
 
-            // Foreign keys
             $table->foreign('id_nivel')
                   ->references('id')
                   ->on('niveles');
 
             $table->foreign('id_enemigo')
-                  ->references('id_enemigo')
+                  ->references('id')
                   ->on('enemigos');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('niveles_enemigos');
+        Schema::dropIfExists('escalados');
     }
 };

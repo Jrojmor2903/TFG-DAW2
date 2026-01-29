@@ -8,9 +8,13 @@ class Ranking extends Model
 {
     protected $table = 'ranking';
 
-        protected $fillable = [
+    protected $fillable = [
         "id_usuario",
         "puntuacion",
         "fecha_partida"
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_usuario');
+    }
 }

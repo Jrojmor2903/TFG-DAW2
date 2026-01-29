@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('user_naves', function (Blueprint $table) {
+        Schema::create('flotas', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('user_id')
@@ -16,16 +16,12 @@ return new class extends Migration {
             $table->foreignId('nave_id')
                 ->constrained('naves');
 
-            $table->boolean('equipada')->default(false);
-
-            $table->timestamps();
-
             $table->unique(['user_id', 'nave_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('user_naves');
+        Schema::dropIfExists('flotas');
     }
 };

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->integer('nivel_actual')->default(1)->after('avatar_url');
             $table->unsignedBigInteger('id_rol')->after('nivel_actual');
             // FK relación con roles
-            $table->foreign('id_rol')->references('id_rol')->on('roles');
+            $table->foreign('id_rol')->references('id')->on('roles');
         });
     }
 

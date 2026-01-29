@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre_nivel', 100)->unique();
             $table->string('dificultad');
-            $table->integer('num_enemigos');
             $table->string('fondo_url');
         });
     }

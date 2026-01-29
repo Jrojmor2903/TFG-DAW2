@@ -13,4 +13,9 @@ class Partida extends Model
         "duracion",
         "fecha_partida"
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, "id_usuario");
+    }
 }

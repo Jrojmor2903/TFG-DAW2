@@ -12,11 +12,20 @@ class Perfil extends Model
     protected $primaryKey = 'id_perfil';
 
     protected $fillable = [
-        'id_usuario', 'idioma', 'tema_visual', 'sonido', 'dificultad'
+        'id_usuario',
+        'id_nave',
+        'idioma',
+        'tema_visual',
+        'sonido',
+        'dificultad'
     ];
 
-    public function usuario()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'id_usuario', 'id');
+        return $this->belongsTo(User::class, "id_usuario");
+    }
+    public function nave()
+    {
+        return $this->belongsTo(Nave::class, "id_nave");
     }
 }

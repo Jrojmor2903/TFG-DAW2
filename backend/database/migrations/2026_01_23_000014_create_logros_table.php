@@ -7,12 +7,11 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('logros', function (Blueprint $table) {
-            $table->id('id_logro');
+            $table->id();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->integer('puntos')->default(0);
             $table->string('url')->nullable();
-            $table->timestamps();
         });
     }
 

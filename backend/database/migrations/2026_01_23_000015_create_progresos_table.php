@@ -7,25 +7,26 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('usuarios_logros', function (Blueprint $table) {
+        Schema::create('progresos', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('id_usuario');
             $table->unsignedBigInteger('id_logro');
             $table->timestamp('fecha_obtenido')->useCurrent();
 
-            $table->primary(['id_usuario', 'id_logro']);
+            $table->unique(['id_usuario', 'id_logro']);
 
             $table->foreign('id_usuario')
                   ->references('id')
                   ->on('users');
 
             $table->foreign('id_logro')
-                  ->references('id_logro')
+                  ->references('id')
                   ->on('logros');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('usuarios_logros');
+        Schema::dropIfExists('progresos');
     }
 };

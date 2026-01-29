@@ -12,6 +12,36 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(Rol::class, 'asignaciones');
+    }
+    public function rankings()
+    {
+        return $this->hasMany(Ranking::class, 'id_usuario');
+    }
+    public function logros()
+    {
+        return $this->belongsToMany(Logro::class, 'progresos');
+    }
+
+    public function navesDesbloqueadas()
+    {
+        return $this->belongsToMany(
+            Nave::class, // modelo relacionado
+            'flotas',    // tabla pivote
+            'user_id',   // FK de este modelo en pivote
+            'nave_id'    // FK del modelo relacionado en pivote
+        );
+    }
+
+    public function perfil()
+    {
+        return $this->hasOne(Perfil::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

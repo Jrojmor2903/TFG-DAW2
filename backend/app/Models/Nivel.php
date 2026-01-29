@@ -7,10 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Nivel extends Model
 {
     protected $fillable = [
-        "id",
         "nombre_nivel",
         "dificultad",
-        "num_enemigos",
         "fondo_url"
     ];
+
+
+    public function enemigos()
+    {
+        return $this->belongsToMany(
+            Enemigo::class,
+            'escalados',
+            'id_nivel',
+            'id_enemigo'
+        )->withPivot('cantidad');
+    }
 }

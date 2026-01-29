@@ -7,26 +7,26 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('user_roles', function (Blueprint $table) {
+        Schema::create('asignaciones', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_rol');
 
             // Claves foráneas
-            $table->foreign('user_id')
+            $table->foreign('id_user')
                 ->references('id')->on('users');
 
             $table->foreign('id_rol')
-                ->references('id_rol')->on('roles');
+                ->references('id')->on('roles');
 
             // Evita duplicados (un usuario no puede tener el mismo rol dos veces)
-            $table->unique(['user_id', 'id_rol']);
+            $table->unique(['id_user', 'id_rol']);
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('asignaciones');
     }
 };

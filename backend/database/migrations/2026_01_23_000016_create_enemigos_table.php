@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('enemigos', function (Blueprint $table) {
-            $table->id('id_enemigo');
+            $table->id();
             $table->string('nombre');
             $table->integer('vida')->default(100);
             $table->integer('daño')->default(10);
