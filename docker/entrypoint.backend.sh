@@ -19,8 +19,17 @@ if [ "$(php -r "echo getenv('CACHE_STORE');")" = "database" ]; then
 fi
 
 echo "⚠️ Ejecutando migrate"
-php artisan migrate --seed --force || exit 1
+php artisan migrate --force || exit 1
 echo "✅ migrate terminado"
+
+echo "⚠️ Ejecutando db:seed"
+php artisan tinker --execute="if (!Schema::hasTable('users')) exit(1)"
+
+if [ $? -eq 0 ]; then
+  php artisan db:seed --force || exit 1
+fi
+echo "✅ db:seed terminado"
+
 
 # Limpiar cache
 php artisan optimize:clear

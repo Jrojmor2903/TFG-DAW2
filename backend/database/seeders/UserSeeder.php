@@ -15,19 +15,21 @@ class UserSeeder extends Seeder
         $userRole  = Rol::where('slug', 'user')->first();
 
         // Crear usuarios
-        $admin = User::create([
-            'name' => 'Admin',
+        $admin = User::updateOrCreate([
+            'name' => 'Admin'],[
             'email' => 'admin@admin.com',
+        ],[
             'password' => Hash::make('password'),
         ]);
 
-        $user = User::create([
-            'name' => 'Usuario',
+        $user = User::updateOrCreate([
+            'name' => 'Usuario'],[
             'email' => 'user@user.com',
+        ],[
             'password' => Hash::make('password'),
         ]);
 
-        $admin->roles()->attach($adminRole->id);
-        $user->roles()->attach($userRole->id);
+        $admin->roles()->syncWithoutDetaching([$adminRole->id]);
+        $user->roles()->syncWithoutDetaching([$userRole->id]);
     }
 }

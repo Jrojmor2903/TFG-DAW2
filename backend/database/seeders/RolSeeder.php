@@ -9,15 +9,13 @@ class RolSeeder extends Seeder
 {
     public function run(): void
     {
-        Rol::insert([
-            [
-                'nombre' => 'Administrador',
-                'slug' => 'admin',
-            ],
-            [
-                'nombre' => 'Usuario',
-                'slug' => 'user',
-            ],
+        Rol::updateOrCreate([
+            'nombre' => 'Administrador',
+            'slug' => 'admin',
+        ]);
+        Rol::updateOrCreate([
+            'nombre' => 'Usuario',
+            'slug' => 'user',
         ]);
     }
 }
