@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Rol;
 
 class User extends Authenticatable
 {
@@ -13,10 +14,12 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
 
-
+    /**
+     * @return BelongsToMany<Rol>
+     */
     public function roles()
     {
-        return $this->belongsToMany(Rol::class, 'asignaciones');
+        return $this->belongsToMany(Rol::class, 'asignaciones', 'id_user', 'id_rol');
     }
     public function rankings()
     {

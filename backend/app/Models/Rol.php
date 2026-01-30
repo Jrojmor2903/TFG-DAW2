@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rol extends Model
 {
-
-    protected $fillable = ['nombre'];
+    protected $table = 'roles';
+    protected $fillable = ['nombre', 'slug'];
 
     public function permisos()
     {
@@ -18,8 +18,8 @@ class Rol extends Model
             'id_permiso'
         );
     }
-    public function usuarios()
+    public function usuario()
     {
-        return $this->belongsToMany(User::class, 'asignaciones');
+        return $this->belongsToMany(User::class, 'asignaciones', 'id_rol', 'id_user');
     }
 }
