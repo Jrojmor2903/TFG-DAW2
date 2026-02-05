@@ -12,13 +12,14 @@ return new class extends Migration
             // Campos extra según tu diagrama
             $table->string('avatar_url')->nullable();
             $table->integer('nivel_actual')->default(1)->after('avatar_url');
+            $table->softDeletes();
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['avatar_url', 'nivel_actual']);
+            $table->dropColumn(['avatar_url', 'nivel_actual', 'deleted_at']);
         });
     }
 };

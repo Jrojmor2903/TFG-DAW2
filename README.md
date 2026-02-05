@@ -20,9 +20,11 @@ Toda la documentación del proyecto se encuentra disponible en la **Wiki del rep
 ## 🛠️ Tecnologías
 - **FrontEnd**
     - Realizado con JavaScript usando el FrameWork React
+    - URL "pública" https://brycen-nonlibidinous-demetra.ngrok-free.dev/
 
 - **BackEnd**
     - Realizado con PHP usando el FrameWork Laravel
+    - URL "pública" https://larry-birdless-demandingly.ngrok-free.dev/
  
 - Git y GitHub para control de versiones
 
