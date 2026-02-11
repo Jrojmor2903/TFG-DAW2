@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UsuarioResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Rol;
@@ -11,8 +12,8 @@ class UsuarioController extends Controller
 {
     public function index()
     {
-        $usuarios = User::all();
-        return $usuarios->tojson();
+        $usuarios = User::paginate(5);
+        return UsuarioResource::collection($usuarios);
     }
 
     public function store(Request $request)

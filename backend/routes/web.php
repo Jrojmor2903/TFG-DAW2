@@ -8,6 +8,7 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\NivelController;
 use App\Http\Controllers\RankingController;
+use App\Http\Controllers\RankingViewController;
 use App\Http\Controllers\FlotaController;
 use App\Http\Controllers\EnemigoController;
 
@@ -30,7 +31,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // CONTENIDO
     // ======================
     Route::resource('niveles', NivelController::class);
-    Route::resource('ranking', RankingController::class);
+    Route::resource('ranking', RankingViewController::class);
     Route::resource('enemigos', EnemigoController::class);
     Route::resource('flotas', FlotaController::class);
 });
