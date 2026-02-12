@@ -21,11 +21,11 @@ return new class extends Migration
 
             $table->foreign('id_usuario')
                 ->references('id')
-                ->on('users');
+                ->on('users')->cascadeOnDelete();
 
             $table->foreign('id_nave')
                 ->references('id')
-                ->on('naves');
+                ->on('naves')->cascadeOnDelete();
         });
     }
 

@@ -3,12 +3,10 @@
 @section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="mb-0">👤 Gestión de Usuarios</h1>
-    <a href="{{ route('user.deleted') }}" class="btn btn-danger btn-sm">
-        Usuarios Eliminados
-    </a>
-    <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm">
-        + Nuevo Usuario
+    <h1 class="mb-0">👤 Gestión de Usuarios Eliminados</h1>
+
+    <a href="{{ route('user.index') }}" class="btn btn-secondary btn-sm">
+        Volver
     </a>
 </div>
 
@@ -40,19 +38,16 @@
             </td>
             <td>{{ $user->created_at->format('d/m/Y') }}</td>
             <td class="text-end">
-                <a href="{{ route('user.show', $user->id) }}"
-                    class="btn btn-info btn-sm">
-                    Ver
-                </a>
-                <a href="{{ route('user.edit', $user->id) }}"
-                    class="btn btn-warning btn-sm">
-                    Editar
-                </a>
+                <form action="{{ route('user.restore', $user->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    <button class="btn btn-success btn-sm">Restaurar</button>
+                </form>
 
-                <a href="{{ route('user.delete', $user->id) }}"
-                    class="btn btn-danger btn-sm">
-                    Eliminar
-                </a>
+                <form action="{{ route('user.forceDelete', $user->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm">Eliminar permanentemente</button>
+                </form>
             </td>
         </tr>
         @empty

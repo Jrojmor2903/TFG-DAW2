@@ -9,11 +9,14 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Rol;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasApiTokens, SoftDeletes;
+    use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
+
+
 
 
     /**
@@ -56,6 +59,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_url',
     ];
 
     /**
@@ -67,6 +71,13 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => $value ? bcrypt($value) : null,
+        );
+    }
 
     /**
      * Get the attributes that should be cast.

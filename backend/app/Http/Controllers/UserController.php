@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Rol;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -12,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user.index');
+        $usuarios = User::all();
+        return view('user.index', compact('usuarios'));
     }
 
     /**
@@ -20,15 +24,23 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Rol::all();
+        return view('user.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $usuario = User::create([
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'password'   => $request->password,
+            'avatar_url' => $request->avatar_url,
+        ]);
+
+        $usuario->roles()->sync($request->rol);
+
+        return redirect()->route('user.index')
+            ->with('success', 'Usuario creado correctamente');
     }
 
     /**
@@ -36,7 +48,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return view('user.show', compact('user'));
     }
 
     /**
@@ -44,15 +56,39 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        $roles = Rol::all();
+        return view('user.edit', compact('user', 'roles'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+
+        $datos = [
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'avatar_url' => $request->avatar_url,
+        ];
+
+        if ($request->filled('password')) {
+            $datos['password'] = bcrypt($request->password);
+        }
+
+        $user->update($datos);
+
+        $user->roles()->sync($request->rol);
+
+        return redirect()->route('user.index')
+            ->with('success', 'Usuario actualizado correctamente');
+    }
+
+
+    public function delete($id)
+    {
+        $usuario = User::findOrFail($id);
+        return view('user.delete', compact('usuario'));
     }
 
     /**
@@ -60,6 +96,34 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect()->route('user.index')
+            ->with('success', 'Usuario eliminado correctamente');
+    }
+
+
+    public function deletedUsers()
+    {
+        $usuarios = User::onlyTrashed()->with('roles')->get();
+        return view('user.deleted', compact('usuarios'));
+    }
+
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->restore();
+
+        return redirect()->route('user.deleted')
+            ->with('success', 'Usuario restaurado correctamente');
+    }
+
+    public function forceDelete($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->forceDelete();
+
+        return redirect()->route('user.deleted')
+            ->with('success', 'Usuario eliminado permanentemente');
     }
 }

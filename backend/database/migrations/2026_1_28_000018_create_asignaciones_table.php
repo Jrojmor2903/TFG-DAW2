@@ -15,10 +15,10 @@ return new class extends Migration {
 
             // Claves foráneas
             $table->foreign('id_user')
-                ->references('id')->on('users');
+                ->references('id')->on('users')->cascadeOnDelete();
 
             $table->foreign('id_rol')
-                ->references('id')->on('roles');
+                ->references('id')->on('roles')->cascadeOnDelete();
 
             // Evita duplicados (un usuario no puede tener el mismo rol dos veces)
             $table->unique(['id_user', 'id_rol']);

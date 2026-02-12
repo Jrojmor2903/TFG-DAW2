@@ -21,7 +21,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/', [DashboardController::class, "index"])->name("dashboard");
 
-    Route::resource('users', UserController::class);
+    Route::get('user/{usuario}/delete', [UserController::class, 'delete'])
+        ->name('user.delete');
+
+    Route::get('user/deleted', [UserController::class, 'deletedUsers'])->name('user.deleted');
+    Route::post('user/{id}/restore', [UserController::class, 'restore'])->name('user.restore');
+    Route::delete('user/{id}/force-delete', [UserController::class, 'forceDelete'])->name('user.forceDelete');
+
+    Route::resource('user', UserController::class);
+
     Route::resource('roles', RolController::class);
     Route::resource('permisos', PermisoController::class);
 
