@@ -34,8 +34,7 @@
                 <input type="url"
                     name="avatar_url"
                     class="form-control"
-                    value="{{ old('avatar_url') }}"
-                    required>
+                    value="{{ old('avatar_url', $user->avatar_url) }}">
             </div>
 
             <div class="mb-3">

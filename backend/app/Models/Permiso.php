@@ -12,7 +12,7 @@ class Permiso extends Model
     {
         return $this->belongsToMany(
             Rol::class,
-            'roles_permiso',
+            'autorizaciones',
             'id_permiso',
             'id_rol'
         );

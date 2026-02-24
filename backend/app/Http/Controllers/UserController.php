@@ -7,9 +7,22 @@ use App\Models\Rol;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
+
+    protected $userService;
+
+
+    public function __construct(
+
+        UserService $userService,
+
+    ) {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,15 +43,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        $usuario = User::create([
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'password'   => $request->password,
-            'avatar_url' => $request->avatar_url,
-        ]);
-
-        $usuario->roles()->sync($request->rol);
-
+        $this->userService->createDefault($request);
         return redirect()->route('user.index')
             ->with('success', 'Usuario creado correctamente');
     }
@@ -66,19 +71,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
 
-        $datos = [
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'avatar_url' => $request->avatar_url,
-        ];
-
-        if ($request->filled('password')) {
-            $datos['password'] = bcrypt($request->password);
-        }
-
-        $user->update($datos);
-
-        $user->roles()->sync($request->rol);
+        $this->userService->updateDefault($request, $user);
 
         return redirect()->route('user.index')
             ->with('success', 'Usuario actualizado correctamente');

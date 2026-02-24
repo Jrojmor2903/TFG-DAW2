@@ -9,8 +9,8 @@
         <li class="nav-item text-muted mt-3">GESTIÓN</li>
 
         <li><a class="nav-link text-white" href="{{ route('user.index') }}">👤 Usuarios</a></li>
-        <li><a class="nav-link text-white" href="{{ route('roles.index') }}">🧩 Roles</a></li>
-        <li><a class="nav-link text-white" href="{{ route('permisos.index') }}">🔐 Permisos</a></li>
+        <li><a class="nav-link text-white" href="{{ route('rol.index') }}">🧩 Roles</a></li>
+        <li><a class="nav-link text-white" href="{{ route('permiso.index') }}">🔐 Permisos</a></li>
 
         <li class="nav-item text-muted mt-3">CONTENIDO</li>
 

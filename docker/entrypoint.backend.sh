@@ -12,10 +12,19 @@ echo "✅ MySQL listo"
 
 # Permisos
 chown -R www-data:www-data storage bootstrap/cache
-
+chmod -R 775 storage bootstrap/cache
 # Crear tabla de cache si usamos CACHE_STORE=database
 if [ "$(php -r "echo getenv('CACHE_STORE');")" = "database" ]; then
   php artisan cache:table || true
+fi
+
+echo "Instalando dependencias de laravel"
+
+if [ ! -d "vendor" ]; then
+    echo "Carpeta 'vendor' no encontrada, ejecutando composer install..."
+    composer install
+else
+    echo "Carpeta 'vendor' ya existe, continuando con el script..."
 fi
 
 echo "⚠️ Ejecutando migrate"

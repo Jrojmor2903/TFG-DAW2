@@ -13,8 +13,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_rol');
             $table->unsignedBigInteger('id_permiso');
 
-            $table->foreign('id_rol')->references('id')->on('roles');
-            $table->foreign('id_permiso')->references('id')->on('permisos');
+            $table->foreign('id_rol')->references('id')->on('roles')->cascadeOnDelete();
+            $table->foreign('id_permiso')->references('id')->on('permisos')->cascadeOnDelete();
 
             $table->unique(['id_rol', 'id_permiso']);
         });
