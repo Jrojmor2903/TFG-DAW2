@@ -12,7 +12,8 @@ class NaveController extends Controller
      */
     public function index()
     {
-        //
+        $naves = Nave::all();
+        return view('nave.index', compact('naves'));
     }
 
     /**

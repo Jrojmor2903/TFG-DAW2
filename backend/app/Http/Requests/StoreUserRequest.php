@@ -17,7 +17,8 @@ class StoreUserRequest extends FormRequest
             'name'   => 'required|string|max:255',
             'email'   => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'avatar_url'   => 'nullable|url|max:2048',
+            'avatar_url'   => 'nullable|image|max:2048',
+            'nombreImg' => 'nullable|string|max:255',
             'rol'      => 'required|array',
             'rol.*'    => 'exists:roles,id',
         ];
@@ -28,7 +29,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name.required'   => 'El nombre es obligatorio.',
             'email.unique'     => 'El correo ya está registrado.',
-            'password.confirmed'=> 'Las contraseñas no coinciden.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
             'rol.required'      => 'Debes seleccionar al menos un rol.',
         ];
     }

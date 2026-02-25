@@ -4,10 +4,18 @@
 
 <h1 class="mb-4">✏ Editar Usuario</h1>
 
+@if ($errors->any())
+    <div style="color:red">
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
+
 <div class="card shadow-sm">
     <div class="card-body">
 
-        <form action="{{ route('user.update', $user->id) }}" method="POST">
+        <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -30,11 +38,17 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Avatar URL</label>
-                <input type="url"
-                    name="avatar_url"
+                <label class="form-label">Avatar</label>
+                <input type="file" name="avatar" class="form-control" accept="image/*">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre de imagen</label>
+                <input type="text"
+                    value=""
+                    name="nombreImg"
                     class="form-control"
-                    value="{{ old('avatar_url', $user->avatar_url) }}">
+                    placeholder="Dejar vacío para que el nombre sea el del archivo">
             </div>
 
             <div class="mb-3">

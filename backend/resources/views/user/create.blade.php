@@ -18,7 +18,7 @@
 <div class="card shadow-sm">
     <div class="card-body">
 
-        <form action="{{ route('user.store') }}" method="POST">
+        <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
@@ -40,13 +40,18 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Avatar URL</label>
-                <input type="url"
-                    name="avatar_url"
-                    class="form-control"
-                    value="{{ old('avatar_url') }}">
+                <label class="form-label">Avatar</label>
+                <input type="file" name="avatar" class="form-control" accept="image/*">
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Nombre de imagen</label>
+                <input type="text"
+                    value=""
+                    name="nombreImg"
+                    class="form-control"
+                    placeholder="Dejar vacío para que el nombre sea el del archivo">
+            </div>
 
             <div class="mb-3">
                 <label class="form-label">Contraseña</label>

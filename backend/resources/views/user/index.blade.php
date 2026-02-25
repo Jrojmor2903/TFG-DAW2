@@ -27,9 +27,10 @@
         @forelse($usuarios as $user)
         <tr>
             <td class="d-flex align-items-center">
-                <img src="{{ $user->avatar_url ?? 'https://i.pinimg.com/736x/d9/d8/8e/d9d88e3d1f74e2b8ced3df051cecb81d.jpg' }}"
+                <img
+                    src="{{ $user->avatar_url ?? '' }}"
                     alt="Avatar de {{ $user->name }}"
-                    class="rounded-circle me-2"
+                    class="avatar rounded-circle me-2"
                     style="width:40px; height:40px; object-fit:cover;">
                 {{ $user->id }}
             </td>
