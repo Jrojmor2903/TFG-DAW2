@@ -83,7 +83,7 @@
         @empty
         <tr>
             <td colspan="6" class="text-center py-3">
-                No hay rols registrados.
+                No hay roles registrados.
             </td>
         </tr>
         @endforelse

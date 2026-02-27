@@ -4,22 +4,35 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class ImagenService
 {
     public function subir(UploadedFile $archivo, string $nombreDeseado)
     {
-
-        if (empty($nombreDeseado)) {
-            $nombreDeseado = $archivo->getClientOriginalName();
-        }
-
+        $extension = $archivo->getClientOriginalExtension();
         $carpeta = 'uploads';
 
-        $path = Storage::disk('s3')->putFileAs($carpeta, $archivo, $nombreDeseado);
+        if (empty($nombreDeseado)) {
+            $nombreBase = pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME);
+        } else {
+            $nombreBase = Str::slug($nombreDeseado);
+        }
 
-        $url = 'https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/' . $path;
-        return $url;
+        $nombreArchivo = $nombreBase . '.' . $extension;
+        $rutaCompleta = $carpeta . '/' . $nombreArchivo;
+
+        $contador = 1;
+
+        while (Storage::disk('s3')->exists($rutaCompleta)) {
+            $nombreArchivo = $nombreBase . $contador . '.' . $extension;
+            $rutaCompleta = $carpeta . '/' . $nombreArchivo;
+            $contador++;
+        }
+
+        Storage::disk('s3')->putFileAs($carpeta, $archivo, $nombreArchivo);
+
+        return 'https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/' . $rutaCompleta;
     }
 
     public function updateUser($user)
@@ -35,7 +48,7 @@ class ImagenService
         $url = $model->{$campo};
         if (!$url) return;
 
-        $baseUrl = 'https://<PROJECT_REF>.supabase.co/storage/v1/object/public/<BUCKET>/';
+        $baseUrl = 'https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/';
         $path = str_replace($baseUrl, '', $url);
 
         if (Storage::disk('s3')->exists($path)) {
@@ -46,5 +59,4 @@ class ImagenService
         $model->{$campo} = null;
         $model->save();
     }
-
 }

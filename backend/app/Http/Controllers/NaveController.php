@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreNaveRequest;
 use App\Models\Nave;
 use Illuminate\Http\Request;
+use App\Services\NaveService;
 
 class NaveController extends Controller
 {
+
+    protected $naveService;
+
+    public function __construct(
+
+        NaveService $naveService,
+
+    ) {
+        $this->naveService = $naveService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -21,15 +34,16 @@ class NaveController extends Controller
      */
     public function create()
     {
-        //
+        return view('nave.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNaveRequest $request)
     {
-        //
+        $this->naveService->createDefault($request);
+        return redirect()->route('nave.index')->with('success', 'Nave creada correctamente');
     }
 
     /**
@@ -37,15 +51,16 @@ class NaveController extends Controller
      */
     public function show(Nave $nave)
     {
-        //
+        return view('nave.show', compact('nave'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Nave $nave)
+    public function edit($id)
     {
-        //
+            $nave = Nave::find($id);
+            return view('nave.edit', compact('nave'));
     }
 
     /**
@@ -53,14 +68,20 @@ class NaveController extends Controller
      */
     public function update(Request $request, Nave $nave)
     {
-        //
+        $this->naveService->updateDefault($request, $nave);
+        return redirect()->route('nave.index')->with('success', 'Nave actualizada correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Nave $nave)
+    public function destroy($id)
     {
-        //
+        $nave = Nave::findOrFail($id);
+        $this->naveService->deleteDefault($nave->avatar_url);
+        $nave->delete();
+
+        return redirect()->route('nave.index')
+            ->with('success', 'Nave eliminado correctamente');
     }
 }

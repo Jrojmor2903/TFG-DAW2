@@ -11,14 +11,12 @@ class RoleAdminMiddleware
 {
     public function handle(Request $request, Closure $next, $roleSlug): Response
     {
-        $user = Auth::user();
+        $user = Auth::guard('web')->user();
 
-        // Si no hay usuario logueado → 403
         if (!$user) {
             abort(403, 'Acceso denegado');
         }
 
-        // Revisar si el usuario tiene asignado el rol
         $tieneRol = $user->roles()->where('slug', $roleSlug)->exists();
 
         if (!$tieneRol) {

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Ranking extends Model
 {
     protected $table = 'rankings';
-
+    public $timestamps = false;
+    
     protected $fillable = [
         "id_usuario",
         "puntuacion",

@@ -16,8 +16,7 @@ class UserSeeder extends Seeder
 
         // Crear usuarios
         $admin = User::updateOrCreate(
-            ['name' => 'Admin',
-            'avatar_url' => 'https://pbs.twimg.com/media/FRObQ-OXsAApKYW.jpg'],
+            ['name' => 'Admin'],
             [
                 'email' => 'admin@admin.com',
                 'password' => 'password',

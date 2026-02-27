@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RankingRequest;
 use App\Models\Ranking;
+use App\Models\RankingView;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RankingController extends Controller
@@ -12,7 +15,8 @@ class RankingController extends Controller
      */
     public function index()
     {
-        //
+        $rankings = RankingView::orderBy('posicion')->get();
+        return view('ranking.index', compact('rankings'));
     }
 
     /**
@@ -20,23 +24,27 @@ class RankingController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::all();
+        return view('ranking.create', compact('users'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RankingRequest $request)
     {
-        //
+        Ranking::create($request->validated());
+
+        return redirect()->route('ranking.index')
+            ->with('success', 'Ranking creada correctamente');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Ranking $ranking)
+    public function show(RankingView $ranking)
     {
-        //
+        return view('ranking.show', compact('ranking'));
     }
 
     /**
@@ -44,22 +52,31 @@ class RankingController extends Controller
      */
     public function edit(Ranking $ranking)
     {
-        //
+        $users = User::all();
+        return view('ranking.edit', compact('users', 'ranking'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ranking $ranking)
+    public function update(RankingRequest $request, Ranking $ranking)
     {
-        //
+        $ranking->update($request->validated());
+
+        return redirect()->route('ranking.index')
+            ->with('success', 'Ranking actualizado correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ranking $ranking)
+    public function destroy($id)
     {
-        //
+        $ranking = Ranking::findOrFail($id);
+
+        $ranking->delete();
+
+        return redirect()->route('nave.index')
+            ->with('success', 'Ranking eliminado correctamente');
     }
 }

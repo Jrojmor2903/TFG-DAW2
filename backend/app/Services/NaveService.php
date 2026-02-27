@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\Services\ImagenService;
 
-use App\Models\User;
+use App\Models\Nave;
 
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
-class UserService
+class NaveService
 {
 
     protected $imagenService;
@@ -31,35 +31,36 @@ class UserService
         try {
 
             $avatarUrl = null;
+
             if ($request->hasFile('avatar')) {
                 $avatarUrl = $this->imagenService->subir($request->file('avatar'), $request->nombreImg ?? '');
             }
 
-            $usuario = User::create([
-                'name'       => $request->name,
-                'email'      => $request->email,
-                'password'   => $request->password,
-                'avatar_url' => $avatarUrl,
+            $nave = Nave::create([
+                'nombre'       => $request->nombre,
+                'vida'      => $request->vida,
+                'poder_disparo'   => $request->poder_disparo,
+                'cadencia'   => $request->cadencia,
+                'precio'   => $request->precio,
+                'avatar_url' => $avatarUrl ?? '',
             ]);
-
-            $usuario->roles()->sync($request->rol);
 
             DB::commit();
 
-            return $usuario;
+            return $nave;
         } catch (Exception $e) {
             DB::rollBack();
 
-            throw new Exception('Ha ocurrido un error durante la creación del usuario: ' . $e->getMessage());
+            throw new Exception('Ha ocurrido un error durante la creación de la nave: ' . $e->getMessage());
         }
     }
 
-    public function updateDefault($request, $user)
+    public function updateDefault($request, $nave)
     {
         DB::beginTransaction();
 
         try {
-            $avatarUrl = $user->avatar_url;
+            $avatarUrl = $nave->avatar_url;
 
 
             if ($request->hasFile('avatar')) {
@@ -71,26 +72,26 @@ class UserService
                 $avatarUrl = $this->imagenService->subir($request->file('avatar'), $request->nombreImg ?? '');
             }
             $datos = [
-                'name'       => $request->name,
-                'email'      => $request->email,
+                'nombre'        => $request->nombre,
+                'vida'          => $request->vida,
+                'poder_disparo' => $request->poder_disparo,
+                'cadencia'      => $request->cadencia,
+                'precio'        => $request->precio,
                 'avatar_url' => $avatarUrl,
             ];
 
-            if ($request->filled('password')) {
-                $datos['password'] = $request->password;
-            }
+            $nave->update($datos);
 
-            $user->update($datos);
-
-            $user->roles()->sync($request->rol);
             DB::commit();
-            return $user;
+            return $nave;
         } catch (Exception $e) {
             DB::rollBack();
 
-            throw new Exception('Ha ocurrido un error durante la actualización del usuario: ' . $e->getMessage());
+            throw new Exception('Ha ocurrido un error durante la actualización de la nave: ' . $e->getMessage());
         }
     }
+
+
     public function deleteDefault($url)
     {
         if (!$url) {

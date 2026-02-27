@@ -24,13 +24,5 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'name.required'   => 'El nombre es obligatorio.',
-            'email.unique'     => 'El correo ya está registrado.',
-            'password.confirmed' => 'Las contraseñas no coinciden.',
-            'rol.required'      => 'Debes seleccionar al menos un rol.',
-        ];
-    }
+
 }

@@ -114,6 +114,7 @@ class UserController extends Controller
     public function forceDelete($id)
     {
         $user = User::onlyTrashed()->findOrFail($id);
+        $this->userService->deleteDefault($user->avatar_url);
         $user->forceDelete();
 
         return redirect()->route('user.deleted')

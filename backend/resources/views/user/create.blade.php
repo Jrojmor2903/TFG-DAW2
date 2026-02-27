@@ -4,16 +4,6 @@
 
 <h1 class="mb-4">➕ Crear Usuario</h1>
 
-@if ($errors->any())
-<div class="alert alert-danger"> <strong>Ups...</strong> Hay errores en el formulario. <ul class="mb-0 mt-2">
-
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-
-</div>
-@endif
 
 <div class="card shadow-sm">
     <div class="card-body">

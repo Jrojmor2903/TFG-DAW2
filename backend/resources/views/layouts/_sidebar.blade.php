@@ -14,9 +14,9 @@
 
         <li class="nav-item text-muted mt-3">CONTENIDO</li>
 
-        <li><a class="nav-link text-white" href="{{ route('nivel.index') }}">📈 Niveles</a></li>
+        <!-- <li><a class="nav-link text-white" href="{{ route('nivel.index') }}">📈 Niveles</a></li> -->
         <li><a class="nav-link text-white" href="{{ route('ranking.index') }}">🏆 Ranking</a></li>
-        <li><a class="nav-link text-white" href="{{ route('enemigo.index') }}">👾 Enemigos</a></li>
+        <!-- <li><a class="nav-link text-white" href="{{ route('enemigo.index') }}">👾 Enemigos</a></li> -->
         <li><a class="nav-link text-white" href="{{ route('nave.index') }}">🚀 Naves</a></li>
         <li><a class="nav-link text-white" href="{{ route('imagen.index') }}">🖼️ Imagénes</a></li>
 

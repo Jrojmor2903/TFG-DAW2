@@ -6,7 +6,7 @@ use App\Models\Enemigo;
 use App\Models\User;
 use App\Models\Rol;
 use App\Models\Permiso;
-use App\Models\Nivel;
+use App\Models\Nave;
 use App\Models\RankingView;
 use Illuminate\Http\Request;
 
@@ -21,7 +21,7 @@ class DashboardController extends Controller
             'usuariosCount' => User::count(),
             'rolesCount' => Rol::count(),
             'permisosCount' => Permiso::count(),
-            'nivelesCount' => Nivel::count(),
+            'navesCount' => Nave::count(),
             'usuarios' => User::latest()->limit(5)->get(),
             'ranking' => RankingView::all(),
         ]);

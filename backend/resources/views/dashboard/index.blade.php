@@ -35,8 +35,8 @@
     <div class="col-md-3">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h6>Niveles</h6>
-                <h3>{{ $nivelesCount ?? 0 }}</h3>
+                <h6>Naves</h6>
+                <h3>{{ $navesCount ?? 0 }}</h3>
             </div>
         </div>
     </div>

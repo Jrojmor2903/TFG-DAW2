@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Nave extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
+    
     protected $fillable = [
         'nombre',
         'vida',
         'poder_disparo',
         'cadencia',
-        'precio'
+        'precio',
+        'avatar_url'
     ];
 
     public function usuarios()

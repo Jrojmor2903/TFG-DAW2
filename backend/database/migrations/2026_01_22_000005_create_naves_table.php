@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('poder_disparo');
             $table->integer('cadencia');
             $table->integer('precio');
-            $table->string('avatar_url');
+            $table->string('avatar_url')->nullable();
 
         });
     }

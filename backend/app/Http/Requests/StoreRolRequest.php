@@ -20,11 +20,4 @@ class StoreRolRequest extends FormRequest
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'permiso.required' => 'Debes seleccionar al menos un permiso.',
-        ];
-    }
 }

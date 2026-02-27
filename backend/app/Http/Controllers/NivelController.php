@@ -12,7 +12,8 @@ class NivelController extends Controller
      */
     public function index()
     {
-        return view('nivel.index');
+        $niveles = Nivel::all();
+        return view('nivel.index', compact('niveles'));
     }
 
     /**
@@ -20,13 +21,13 @@ class NivelController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store($request)
     {
         //
     }
