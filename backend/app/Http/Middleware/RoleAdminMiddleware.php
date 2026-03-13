@@ -11,16 +11,10 @@ class RoleAdminMiddleware
 {
     public function handle(Request $request, Closure $next, $roleSlug): Response
     {
-        $user = Auth::guard('web')->user();
-
-        if (!$user) {
-            abort(403, 'Acceso denegado');
-        }
-
-        $tieneRol = $user->roles()->where('slug', $roleSlug)->exists();
-
-        if (!$tieneRol) {
-            abort(403, 'Acceso denegado');
+        $user = $request->user();
+        
+        if (!$user->hasRole($roleSlug)) {
+            abort(403, "Acesso denegado");
         }
 
         return $next($request);

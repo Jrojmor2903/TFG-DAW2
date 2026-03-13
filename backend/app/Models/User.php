@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->hasOne(Perfil::class);
     }
 
+    public function hasRole($slug)
+    {
+        return $this->roles()->where('slug', $slug)->exists();
+    }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -23,6 +23,4 @@ class StoreUserRequest extends FormRequest
             'rol.*'    => 'exists:roles,id',
         ];
     }
-
-
 }

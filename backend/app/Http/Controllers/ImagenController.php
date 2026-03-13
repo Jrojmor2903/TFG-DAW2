@@ -8,6 +8,8 @@ use App\Models\Nave;
 use App\Models\Nivel;
 use App\Services\ImagenService;
 use App\Http\Requests\ImagenDeleteRequest;
+use App\Http\Requests\StoreImagenRequest;
+use Illuminate\Http\Request;
 
 class ImagenController extends Controller
 {
@@ -68,5 +70,14 @@ class ImagenController extends Controller
         $this->imagenService->deleteImageField($model, $request->field);
 
         return back()->with('success', 'Imagen eliminada');
+    }
+    
+    public function create(){
+        return view('imagen.create');
+    }
+
+    public function store(StoreImagenRequest $request){
+        $this->imagenService->subir($request->imagen, $request->nombreImg);
+        return redirect()->route('imagen.index')->with('succes', "Imagen subida correctamente");
     }
 }

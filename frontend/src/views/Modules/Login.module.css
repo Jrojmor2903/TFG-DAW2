@@ -1,0 +1,72 @@
+.contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    /* Subir img a supa base */
+    background-image: url("/backgroung-png.png");
+
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    background-color: rgba(0, 0, 0, 0.787);
+    border: 1px solid var(--verde-base);
+    border-radius: 15px;
+    padding: 100px;
+
+    text-shadow:
+        0 0 5px #8bfefd,
+        0 0 10px #8bfefd,
+        0 0 20px #8bfefd,
+        0 0 40px #8bfefd;
+}
+
+.form input {
+    padding: 10px;
+    width: 150%;
+    background-color: rgba(0, 0, 0, 0.307);
+    border-radius: 15px;
+    color: var(--verde-base);
+
+
+    &::placeholder {
+        color: var(--verde-base);
+    }
+}
+
+.form button {
+    padding: 10px;
+    width: 150%;
+    background-color: var(--verde-base);
+    border-radius: 15px;
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
+
+    text-shadow:
+        0 0 5px #8bfefd,
+        0 0 10px #8bfefd,
+        0 0 20px #8bfefd,
+        0 0 40px #8bfefd;
+
+    &&:hover {
+        background-color: black;
+        color: #8bfefd;
+        font-size: 20px;
+        font-weight: 600;
+
+    text-shadow:
+        0 0 5px #8bfefd,
+        0 0 10px #8bfefd,
+        0 0 20px #8bfefd,
+        0 0 40px #8bfefd;
+
+    }
+}

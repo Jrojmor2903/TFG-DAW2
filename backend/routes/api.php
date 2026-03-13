@@ -11,15 +11,18 @@ use App\Http\Controllers\Api\NaveController;
 
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::post('/register', [UserController::class, 'store']);
+
+Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
 
     Route::get('users-deleted', [UserController::class, 'deletedUsers']);
     Route::post('users/{id}/restore', [UserController::class, 'restore']);
     Route::delete('users/{id}/force', [UserController::class, 'forceDelete']);
-    
-    Route::apiResource('user', UserController::class);
+
+    Route::post('/register', [UserController::class, 'store']);
+
 
     Route::apiResource('rol', RolController::class);
 

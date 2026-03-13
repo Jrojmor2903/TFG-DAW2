@@ -2,6 +2,9 @@
 
 @section('content')
 <h1 class="mb-4">Imágenes subidas</h1>
+    <a href="{{ route('imagen.create') }}" class="btn btn-primary btn-sm">
+        + Subir Imagen
+    </a>
 
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />

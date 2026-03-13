@@ -33,6 +33,7 @@ class AuthController extends Controller
             'success' => true,
             'token'   => $token,
             'user'    => $user,
+            'roles' => $user->roles()->pluck('slug')
         ]);
     }
 
