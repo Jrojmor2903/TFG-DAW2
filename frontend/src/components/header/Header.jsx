@@ -1,15 +1,19 @@
 import { NavLink } from "react-router-dom"
-
+import { useUser } from "../../hooks/useUser";
+import ImagenHover from "../imagenEffect/ImagenHover";
 import styles from "./modules/Header.module.css";
 
 
+
 const Header = () => {
+
+  const { logout } = useUser();
 
   return (
     <div className={styles["header"]}>
       <div className={styles["contenedor-imagen"]}>
         <NavLink to="/">
-          <img src="/Logo.png"/>
+          <ImagenHover classname="w-20"/>
         </NavLink>
       </div>
 
@@ -55,6 +59,7 @@ const Header = () => {
           className={({ isActive }) =>
             isActive ? `${styles["link"]} ${styles["activo"]}` : styles["link"]
           }
+          onClick={logout}
         >
           Cerrar Sesión
         </NavLink>
@@ -63,9 +68,5 @@ const Header = () => {
     </div>
   );
 };
-
-
-
-
 
 export default Header;

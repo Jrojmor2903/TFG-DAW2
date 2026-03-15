@@ -8,9 +8,8 @@
     background-color: black;
     box-sizing: border-box;
     border-bottom: #4AFFB7 2px solid;
-
-
 }
+
 .btn-menu {
     display: none;
     font-size: 30px;
@@ -18,7 +17,8 @@
     border: none;
     color: var(--text-header);
     cursor: pointer;
-    div{
+
+    div {
         display: none;
     }
 }
@@ -41,7 +41,7 @@
 .link {
     font-size: 30px;
     color: white;
-      text-shadow:
+    text-shadow:
         0 0 5px #4AFFB7,
         0 0 10px #4AFFB7,
         0 0 20px #4AFFB7,
@@ -53,8 +53,8 @@
 }
 
 .link:hover {
-        color: black;
-      text-shadow:
+    color: black;
+    text-shadow:
         0 0 5px white,
         0 0 10px white,
         0 0 20px white,
@@ -94,9 +94,11 @@
         padding: 20px 0;
         gap: 20px;
     }
-        .header .btn-menu {
+
+    .header .btn-menu {
         display: block;
-        div{
+
+        div {
             display: block;
         }
     }

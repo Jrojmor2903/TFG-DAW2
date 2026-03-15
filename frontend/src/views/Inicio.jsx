@@ -1,13 +1,18 @@
+import { useUser } from "../hooks/useUser";
+import ImagenNivel from "../components/imagenEffect/ImagenNivel";
 function Inicio() {
+  const { user } = useUser();
+
   return (
-    <div
-      style={{
-        backgroundImage: "url(/backgroung-png.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh"
-      }}
-    >
+    <div className="background-general min-h-screen flex items-center justify-center gap-8">
+      <div className="card-inicio"></div>
+
+      <div className="card-inicio">
+        <ImagenNivel nivel={user.nivel_actual} />
+        <h1>Nivel {user.nivel_actual}</h1>
+      </div>
+
+      <div className="card-inicio"></div>
     </div>
   );
 }

@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import "tailwindcss";
+
+
+
+:root {
+
+  --negro-opacity: rgba(0, 0, 0, 0.787);
+
+  /* VERDE */
+  --verde-light: #edfff8;
+  --verde-light-hover: #e4fff4;
+  --verde-light-active: #c7ffe9;
+
+  --verde-base: #4affb7;
+  --verde-hover: #43e6a5;
+  --verde-active: #3bcc92;
+
+  --verde-dark: #38bf89;
+  --verde-dark-hover: #2c996e;
+  --verde-dark-active: #217352;
+
+  --verde-darker: #145940;
+
+  /* AZUL OSCURO */
+  --azul-light: #edf0ff;
+  --azul-light-hover: #e4e8ff;
+  --azul-light-active: #c7d0fe;
+
+  --azul-base: #4a68fc;
+  --azul-hover: #435ee3;
+  --azul-active: #3b53ca;
+
+  --azul-dark: #384ebd;
+  --azul-dark-hover: #2c3e97;
+  --azul-dark-active: #212f71;
+
+  --azul-darker: #1a2458;
+
+  /* ROSA */
+  --rosa-light: #ffeef8;
+  --rosa-light-hover: #ffe5f4;
+  --rosa-light-active: #fecae8;
+
+  --rosa-base: #fc54b6;
+  --rosa-hover: #e340a4;
+  --rosa-active: #ca4392;
+
+  --rosa-dark: #bd3f89;
+  --rosa-dark-hover: #97326d;
+  --rosa-dark-active: #712652;
+
+  --rosa-darker: #581d40;
+
+
+  /* MORADO */
+  --morado-light: #f5efff;
+  --morado-light-hover: #f0e6ff;
+  --morado-light-active: #dccffe;
+
+  --morado-base: #985afc;
+  --morado-hover: #8951e3;
+  --morado-active: #7a48ca;
+
+  --morado-dark: #7244bd;
+  --morado-dark-hover: #5b3697;
+  --morado-dark-active: #442871;
+
+  --morado-darker: #351f58;
+
+}
+
+@theme {
+  --color-card: var(--text-card);
+  --color-card-hover: var(--text-card-hover);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /*  outline: 1px solid red; */
+  }
+
+  body {
+    font-family: "Roboto", sans-serif;
+    line-height: 1;
+    font-weight: 400;
+    color: var(--gris-text);
+  }
+}
+
+@layer components {
+  .background-general {
+    /* Subir img a supa base */
+    background-image: url("/backgroung-png.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .text-sh-blue {
+    text-shadow:
+      0 0 5px var(--azul-base),
+      0 0 10px var(--azul-base),
+      0 0 20px var(--azul-base),
+      0 0 40px var(--azul-base);
+  }
+
+  .text-sh-verde {
+    text-shadow:
+      0 0 5px var(--verde-base),
+      0 0 10px var(--verde-base),
+      0 0 20px var(--verde-base),
+      0 0 40px var(--verde-base);
+  }
+
+  .form-log-reg {
+    @apply flex flex-col items-center gap-[35px] bg-(--negro-opacity) border border-[var(--verde-base)] rounded-[15px] p-[100px];
+  }
+
+  .input-log-reg {
+    @apply w-[150%] border border-[var(--verde-base)] text-[var(--verde-base)] rounded-[15px] placeholder:text-[var(--verde-base)] p-[10px];
+  }
+
+  .btn {
+    @apply w-[150%] p-2.5 rounded-[15px] bg-(--verde-base);
+  }
+
+  .btn:hover {
+    @apply hover:bg-black hover:text-white hover:border hover:border-(--verde-base);
+  }
+
+  .card-inicio {
+    @apply w-lg h-128 bg-(--negro-opacity) rounded-xl border border-(--verde-base);
+  }
+
+  .card-inicio:hover {
+    @apply -translate-y-2 shadow-lg;
+    box-shadow: 0 0 12px var(--verde-base);
+  }
+}
+
+@layer utilities {}

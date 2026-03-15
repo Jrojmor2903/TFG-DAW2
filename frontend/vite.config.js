@@ -1,14 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   server: {
-    host: true, // opcional: escuchar en todas las interfaces
-    port: 5173, // asegúrate que coincida con tu puerto
-    allowedHosts: [
-      'localhost',
-      '.ngrok-free.dev'  // permite cualquier subdominio de ngrok-free.dev
-    ]
-  }
-})
+    host: true,
+    port: 5173,
+    allowedHosts: ["localhost", ".ngrok-free.dev"],
+  },
+});
