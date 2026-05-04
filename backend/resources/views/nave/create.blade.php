@@ -74,7 +74,7 @@
                     Cancelar
                 </a>
                 <button type="submit" class="btn btn-success btn-sm">
-                    Guardar Usuario
+                    Guardar Nave
                 </button>
             </div>
 

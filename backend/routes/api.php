@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RolController;
 use App\Http\Controllers\Api\NaveController;
+use App\Http\Controllers\Api\PerfilController;
 
 Route::post('login', [AuthController::class, 'login']);
 
@@ -26,6 +27,9 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('rol', RolController::class);
 
+    Route::post('perfil/getByUserId', [PerfilController::class, 'getByUserId']);
+
+    Route::apiResource('perfil', PerfilController::class);
     Route::apiResource('permiso', PermisoController::class);
 
     Route::apiResource('ranking', RankingController::class);

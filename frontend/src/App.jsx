@@ -1,5 +1,5 @@
 import Login from "./views/Login.jsx";
-
+import Juego from "./views/Juego.jsx"
 import Inicio from "./views/Inicio.jsx";
 import RutaProtected from "./components/rutasProtec/RutaProtected.jsx";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
@@ -14,6 +14,7 @@ function App() {
         <Route path="/" element={<Biglayout />}>
           <Route index element={<RutaProtected><Inicio /></RutaProtected>} />
         </Route>
+          <Route path="/juego" element={<RutaProtected><Juego /></RutaProtected>} />
       </Routes>
     </BrowserRouter>
   );

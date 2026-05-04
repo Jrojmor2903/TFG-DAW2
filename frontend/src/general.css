@@ -104,6 +104,14 @@
     background-size: cover;
   }
 
+  .text-a{
+    @apply text-3xl text-white;
+    font-weight: 400;
+  }
+  .text-a:hover{
+    @apply text-black;
+  }
+
   .text-sh-blue {
     text-shadow:
       0 0 5px var(--azul-base),
@@ -112,12 +120,36 @@
       0 0 40px var(--azul-base);
   }
 
+  .text-sh-rosa {
+    text-shadow:
+      0 0 5px var(--rosa-base),
+      0 0 10px var(--rosa-base),
+      0 0 20px var(--rosa-base),
+      0 0 40px var(--rosa-base);
+  }
+
+    .text-sh-morado {
+    text-shadow:
+      0 0 5px var(--morado-base),
+      0 0 10px var(--morado-base),
+      0 0 20px var(--morado-base),
+      0 0 40px var(--morado-base);
+  }
+
   .text-sh-verde {
     text-shadow:
       0 0 5px var(--verde-base),
       0 0 10px var(--verde-base),
       0 0 20px var(--verde-base),
       0 0 40px var(--verde-base);
+  }
+
+  .img-sh-verde{
+    filter:
+      drop-shadow(0 0 5px var(--verde-base))
+      drop-shadow(0 0 10px var(--verde-base))
+      drop-shadow(0 0 20px var(--verde-base))
+      drop-shadow(0 0 40px var(--verde-base))
   }
 
   .form-log-reg {
@@ -137,7 +169,7 @@
   }
 
   .card-inicio {
-    @apply w-lg h-128 bg-(--negro-opacity) rounded-xl border border-(--verde-base);
+    @apply w-lg h-128 bg-(--negro-opacity) rounded-xl border border-(--verde-base) flex flex-col items-center justify-around;
   }
 
   .card-inicio:hover {
@@ -146,4 +178,6 @@
   }
 }
 
-@layer utilities {}
+@layer utilities {
+
+}

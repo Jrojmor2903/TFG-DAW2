@@ -1,16 +1,12 @@
-import { useUser } from "../hooks/useUser";
-import ImagenNivel from "../components/imagenEffect/ImagenNivel";
+import CardHistoria from "../components/card/CardHistoria";
 function Inicio() {
-  const { user } = useUser();
+
 
   return (
     <div className="background-general min-h-screen flex items-center justify-center gap-8">
       <div className="card-inicio"></div>
 
-      <div className="card-inicio">
-        <ImagenNivel nivel={user.nivel_actual} />
-        <h1>Nivel {user.nivel_actual}</h1>
-      </div>
+      <CardHistoria />
 
       <div className="card-inicio"></div>
     </div>

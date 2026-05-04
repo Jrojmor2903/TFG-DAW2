@@ -11,6 +11,6 @@ function ImagenNivel({ nivel }) {
 
   const imagen = imagenes[grupo] || "Logo.png";
 
-  return <img src={imagen} alt="nivel" className="w-[100px]" />;
+  return <img src={imagen} alt="nivel" className="w-[300px] mt-10 " />;
 }
 export default ImagenNivel;
