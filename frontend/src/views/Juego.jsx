@@ -9,6 +9,7 @@ import { usePausa } from "../hooks/usePausa.jsx";
 import { useEnemigos } from "../hooks/useEnemigos.jsx";
 import NaveJugador from "../components/NaveJugador/NaveJugador.jsx";
 import ModalPausa from "../components/Modal/ModalPausa.jsx";
+import ModalGameOver from "../components/Modal/ModalGameOver.jsx";
 import api from "../components/axios/api.jsx";
 
 function Juego() {
@@ -23,23 +24,29 @@ function Juego() {
   useEffect(() => {
     const fetchDatos = async () => {
       try {
-        const resPerfil = await api.post("/perfil/getByUserId", { userId: user.id });
+        const resPerfil = await api.post("/perfil/getByUserId", {
+          userId: user.id,
+        });
         const nivelId = resPerfil.data.nivel_actual; // 🔧 ajusta
 
         const resNivel = await api.get(`/nivel/${nivelId}`);
         setConfig({
-          velocidad:       resNivel.data.velocidad,
+          velocidad: resNivel.data.velocidad,
           intervaloOleada: resNivel.data.intervalo_oleada,
-          enemigosOleada:  resNivel.data.enemigos_oleada,
-          multiplicador:   resNivel.data.multiplicador_vida,
+          enemigosOleada: resNivel.data.enemigos_oleada,
+          multiplicador: resNivel.data.multiplicador_vida,
         });
 
         const resEnemigos = await api.get(`/nivel/${nivelId}/enemigos`);
         setTiposEnemigo(resEnemigos.data);
-
       } catch (e) {
         console.error("Error cargando nivel:", e.response?.data);
-        setConfig({ velocidad: 80, intervaloOleada: 5000, enemigosOleada: 3, multiplicador: 1 });
+        setConfig({
+          velocidad: 80,
+          intervaloOleada: 5000,
+          enemigosOleada: 3,
+          multiplicador: 1,
+        });
         setTiposEnemigo([{ id: 1, avatar_url: "/enemigo.png", vida_base: 1 }]);
       } finally {
         setCargando(false);
@@ -51,9 +58,12 @@ function Juego() {
 
   // ─── 2. Sonido — antes de pausa porque pausa lo necesita ────────
   const {
-    volumenMusica, setVolumenMusica,
-    volumenDisparo, setVolumenDisparo,
-    pausarMusica,  reanudarMusica,
+    volumenMusica,
+    setVolumenMusica,
+    volumenDisparo,
+    setVolumenDisparo,
+    pausarMusica,
+    reanudarMusica,
   } = useSonido();
 
   // ─── 3. Pausa — antes de cualquier hook que la use ──────────────
@@ -65,19 +75,32 @@ function Juego() {
 
   // ─── 5. Disparos ────────────────────────────────────────────────
   const xRef = useRef(x);
-  useEffect(() => { xRef.current = x; }, [x]);
+  useEffect(() => {
+    xRef.current = x;
+  }, [x]);
 
-  const getPlayerX     = useCallback(() => xRef.current, []);
-  const getPlayerWidth = useCallback(() => playerRef.current?.offsetWidth || 32, [playerRef]);
-
-  const { disparos, explotarDisparo } = useDisparos(
-    getPlayerX, getPlayerWidth, volumenDisparo, pausado
+  const getPlayerX = useCallback(() => xRef.current, []);
+  const getPlayerWidth = useCallback(
+    () => playerRef.current?.offsetWidth || 32,
+    [playerRef],
   );
 
-  // ─── 6. Enemigos ────────────────────────────────────────────────
+  const { disparos, explotarDisparo } = useDisparos(
+    getPlayerX,
+    getPlayerWidth,
+    volumenDisparo,
+    pausado,
+  );
+
+  // ─── 6. GameOver ────────────────────────────────────────────────
+
+  const [gameOver, setGameOver] = useState(false);
+
   const handleGameOver = useCallback(() => {
-    navigate("/gameover"); // 🔧 ajusta tu ruta
-  }, [navigate]);
+    setGameOver(true);
+  }, []);
+
+  // ─── 7. Enemigos ────────────────────────────────────────────────
 
   const { enemigos, golpearEnemigo } = useEnemigos(
     containerRef,
@@ -87,7 +110,7 @@ function Juego() {
     tiposEnemigo,
   );
 
-  // ─── 7. Colisiones ──────────────────────────────────────────────
+  // ─── 8. Colisiones ──────────────────────────────────────────────
   useEffect(() => {
     disparos.forEach((disparo) => {
       if (disparo.explota) return;
@@ -160,16 +183,16 @@ function Juego() {
         {disparos.map((d) => (
           <img
             key={d.id}
-            src={d.explota ? "/explosion.png" : "/disparo.png"}
+            src={d.explota ? "/explosion.webp" : "/disparo.png"}
             alt={d.explota ? "explosión" : "disparo"}
             style={{
               position: "absolute",
               left: d.x,
               top: d.y,
-              width: d.explota ? "64px" : "16px",
+              width: d.explota ? "64px" : "40px",
               pointerEvents: "none",
               transform: "rotate(90deg)",
-              width: "40px"
+
             }}
           />
         ))}
@@ -184,6 +207,14 @@ function Juego() {
             setVolumenDisparo={setVolumenDisparo}
           />
         )}
+
+      {gameOver && (
+        <ModalGameOver
+          onReintentar={() => setGameOver(false)}
+          onSalir={() => navigate("/")}
+        />
+      )}
+        
       </div>
 
       <div className="flex-1 bg-black">{user.name}</div>

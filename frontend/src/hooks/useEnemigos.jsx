@@ -14,7 +14,7 @@ export function useEnemigos(
     enemigosOleada = 3,
   } = config;
 
-  // refs para evitar recrear el loop
+
   const velocidadRef = useRef(velocidad);
   const intervaloRef = useRef(intervaloOleada);
   const enemigosOleadaRef = useRef(enemigosOleada);
@@ -31,10 +31,10 @@ export function useEnemigos(
   const lastTimeRef = useRef(0);
   const oleadaRef = useRef(null);
 
-  // ✅ Generar enemigos correctamente
+  // Generar enemigos
   const generarOleada = useCallback(() => {
     const containerWidth =
-      containerRef.current?.offsetWidth || window.innerWidth;
+      containerRef.current?.clientWidth || window.innerWidth;
 
     const anchColumna = containerWidth / COLUMNAS;
 
@@ -58,7 +58,7 @@ export function useEnemigos(
     setEnemigos((prev) => [...prev, ...nuevos]);
   }, [containerRef]);
 
-  // ✅ Loop de movimiento
+  //Movimiento
   useEffect(() => {
     const loop = (time) => {
       if (!lastTimeRef.current) lastTimeRef.current = time;
@@ -94,7 +94,7 @@ export function useEnemigos(
     return () => cancelAnimationFrame(frameRef.current);
   }, [containerRef, onGameOver]);
 
-  // ✅ Control de oleadas
+  // Oleadas
   useEffect(() => {
     generarOleada();
 
@@ -111,7 +111,7 @@ export function useEnemigos(
     return () => clearInterval(oleadaRef.current);
   }, [generarOleada, intervaloOleada]);
 
-  // ✅ Golpear enemigo (vida)
+  // Hit
   const golpearEnemigo = useCallback((id) => {
     setEnemigos((prev) =>
       prev
