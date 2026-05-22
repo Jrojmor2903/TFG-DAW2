@@ -11,12 +11,14 @@ import Logros from "./views/Logros.jsx";
 import Ranking from "./views/Ranking.jsx";
 import Nave from "./views/Nave.jsx";
 import AdminDashboard from "./views/AdminDashboard.jsx";
+import Register from "./views/Register.jsx";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* RUTAS DEL LAYOUT GENERAL */}
         <Route path="/" element={<Biglayout />}>

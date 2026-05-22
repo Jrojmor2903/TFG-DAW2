@@ -5,7 +5,7 @@ import { AdminModal } from "../components/Modal/AdminModal";
 
 // 🛠️ CONFIGURACIÓN PRESERVADA
 const SECTIONS = {
-  usuarios: { label: "Usuarios", endpoint: "/user", columns: ["id", "name", "email", "nivel_actual", "rol", "avatar_url"] },
+  usuarios: { label: "Usuarios", endpoint: "/user", columns: ["id", "name", "email","password" , "nivel_actual", "rol", "avatar_url"] },
   roles: { label: "Roles", endpoint: "/rol", columns: ["id", "nombre", "slug"] },
   logros: { label: "Logros", endpoint: "/logro", columns: ["id", "nombre", "descripcion", "url"] },
   rankings: { label: "Rankings", endpoint: "/ranking", columns: ["id", "usuario_nombre", "puntuacion", "posicion"] },
@@ -101,26 +101,26 @@ export default function AdminDashboard() {
   /* ==========================================================================
      🛠️ PROCESAMIENTO SEGURO CON SOPORTE PARA MULTIPART / ARRAYS (rol[])
      ========================================================================== */
-  const handleSave = async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const payload = {};
+const handleSave = async (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const payload = {};
 
-    // Procesamiento manual del FormData para agrupar inputs múltiples como arrays reales
-    formData.forEach((value, key) => {
-      if (key.endsWith("[]")) {
-        const cleanKey = key.replace("[]", "");
-        if (!payload[cleanKey]) payload[cleanKey] = [];
-        if (value !== "") payload[cleanKey].push(Number(value) || value);
+
+  formData.forEach((value, key) => {
+    if (key.endsWith("[]")) {
+      const cleanKey = key.replace("[]", "");
+      if (!payload[cleanKey]) payload[cleanKey] = [];
+      if (value !== "") payload[cleanKey].push(Number(value) || value);
+    } else {
+      if (value !== "" && !isNaN(value) && key !== "email" && key !== "slug" && key !== "password") {
+        payload[key] = Number(value);
       } else {
-        if (value !== "" && !isNaN(value) && key !== "email" && key !== "slug") {
-          payload[key] = Number(value);
-        } else {
-          payload[key] = value === "" ? null : value;
-        }
+        payload[key] = value === "" ? null : value;
       }
-    });
+    }
+  });
 
     try {
       if (modalType === "crear") {

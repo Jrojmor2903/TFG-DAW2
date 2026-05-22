@@ -13,11 +13,11 @@ use App\Http\Controllers\Api\LogroController;
 use App\Http\Controllers\Api\NivelController;
 use App\Http\Controllers\Api\EnemigoController;
 
-Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login']);
 
-Route::post('/register', [UserController::class, 'store']);
+    Route::post('/register', [UserController::class, 'store']);
 
-Route::post('/auth/check-token', [AuthController::class, 'tokenReg']);
+    Route::post('/auth/check-token', [AuthController::class, 'tokenReg']);
 
 Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
@@ -31,8 +31,6 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::patch('user/{id}/nivel', [UserController::class, 'actualizarNivel']);
     Route::post('user/equipar-nave', [UserController::class, 'equiparNave']);
     
-    Route::post('/register', [UserController::class, 'store']);
-
     Route::get('mis-logros/{id}', [UserController::class, 'misLogros']);
 
     Route::apiResource('user', UserController::class);

@@ -2,8 +2,9 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: "https://tfg-daw2.onrender.com/api",
-  headers: {
-    "ngrok-skip-browser-warning": "true",
+headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
   },
 });
 

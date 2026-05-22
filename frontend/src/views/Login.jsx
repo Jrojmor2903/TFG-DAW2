@@ -45,6 +45,9 @@ function Login() {
         >
           Entrar
         </button>
+
+<a onClick={() => navigate("/register")} className="cursor-pointer">Crear Cuenta</a>
+
       </form>
     </div>
   );

@@ -79,14 +79,34 @@ export function AdminModal({ type, entity, columns, rolesBackend = [], onClose, 
                     ))}
                   </select>
                 ) : (
-                  <input
-                    type={col === "email" ? "email" : "text"}
-                    name={col}
-                    defaultValue={valorInicial}
-                    placeholder={`Introduce ${col}...`}
-                    required={col !== "avatar_url" && col !== "url" && col !== "descripcion" && col !== "imagen_url" && col !== "fondo_url"}
-                    className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white placeholder-neutral-600 focus:outline-none transition-all"
-                  />
+                  <>
+                    {/* Input principal de la columna (password, email o texto) */}
+                    <input
+                      type={col === "email" ? "email" : col === "password" ? "password" : "text"}
+                      name={col}
+                      defaultValue={valorInicial}
+                      placeholder={`Introduce ${col}...`}
+                      required={col !== "avatar_url" && col !== "url" && col !== "descripcion" && col !== "imagen_url" && col !== "fondo_url"}
+                      className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white placeholder-neutral-600 focus:outline-none transition-all"
+                    />
+
+                    {/* 🚀 SI EL MÓDULO PIDE PASSWORD, AQUÍ SINCRO-INYECTAMOS EL INPUT DE CONFIRMACIÓN */}
+                    {col === "password" && (type === "crear" || type === "editar") && (
+                      <div className="flex flex-col gap-1.5 mt-2">
+                        <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+                          Confirmar Password
+                        </label>
+                        <input
+                          type="password"
+                          name="password_confirmation"
+                          defaultValue={valorInicial} // Mismo valor inicial si estamos editando
+                          placeholder="Repite la contraseña..."
+                          required={type === "crear"} // Solo obligatorio al crear un usuario nuevo
+                          className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white placeholder-neutral-600 focus:outline-none transition-all"
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             );
