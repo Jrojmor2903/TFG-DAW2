@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://larry-birdless-demandingly.ngrok-free.dev/api",
+  baseURL: "https://tfg-daw2.onrender.com/api",
   headers: {
     "ngrok-skip-browser-warning": "true",
   },
