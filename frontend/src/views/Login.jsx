@@ -41,7 +41,7 @@ function Login() {
         />
         <button
           type="submit"
-          className="btn text-sh-verde transition duration-500"
+          className="w-[150%] p-2.5 rounded-[15px] bg-(--verde-base) text-sh-verde transition duration-500"
         >
           Entrar
         </button>

@@ -12,7 +12,7 @@ class RankingController extends Controller
 
     public function index()
     {
-        $rankings = RankingView::all();
+        $rankings = RankingView::with('user')->get();
 
         return response()->json([
             'success' => true,

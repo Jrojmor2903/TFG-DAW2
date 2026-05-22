@@ -1,9 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 
 
 :root {
+
+  --tema-visual: #4affb7;
 
   --negro-opacity: rgba(0, 0, 0, 0.787);
 
@@ -71,13 +75,7 @@
 }
 
 @theme {
-  --color-card: var(--text-card);
-  --color-card-hover: var(--text-card-hover);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-ring: var(--ring);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+
 }
 
 @layer base {
@@ -87,7 +85,18 @@
     box-sizing: border-box;
     /*  outline: 1px solid red; */
   }
+  h1{
+    font-family: orbitron;
+  }
+  h2{
+    font-family: orbitron;
+        font-weight: 500;
+  }
+  h3{
+    font-family: orbitron;
+        font-weight: 500;
 
+  }
   body {
     font-family: "Roboto", sans-serif;
     line-height: 1;
@@ -118,6 +127,13 @@
       0 0 10px var(--azul-base),
       0 0 20px var(--azul-base),
       0 0 40px var(--azul-base);
+  }
+    .text-sh-tema {
+    text-shadow:
+      0 0 5px var(--tema-visual),
+      0 0 10px var(--tema-visual),
+      0 0 20px var(--tema-visual),
+      0 0 40px var(--tema-visual);
   }
 
   .text-sh-rosa {
@@ -161,20 +177,22 @@
   }
 
   .btn {
-    @apply w-[150%] p-2.5 rounded-[15px] bg-(--verde-base);
+    @apply w-[150%] p-2.5 rounded-[15px] bg-(--tema-visual);
   }
 
+
+
   .btn:hover {
-    @apply hover:bg-black hover:text-white hover:border hover:border-(--verde-base);
+    @apply hover:bg-black hover:text-white hover:border hover:border-(--tema-visual);
   }
 
   .card-inicio {
-    @apply w-lg h-128 bg-(--negro-opacity) rounded-xl border border-(--verde-base) flex flex-col items-center justify-around;
+    @apply w-lg h-128 bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-around;
   }
 
   .card-inicio:hover {
-    @apply -translate-y-2 shadow-lg;
-    box-shadow: 0 0 12px var(--verde-base);
+    @apply  shadow-lg;
+    box-shadow: 0 0 12px var(--tema-visual);
   }
 }
 

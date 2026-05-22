@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Logro extends Model
 {
+    public $timestamps = false; 
     protected $fillable = [
         "id",
         "nombre",
         "descripcion",
-        "puntos",
         "url"
     ];
 
-    public function usuario()
-    {
-        return $this->belongsToMany(User::class, 'progresos');
-    }
+public function usuarios()
+{
+    return $this->belongsToMany(User::class, 'progresos', 'id_logro', 'id_usuario');
+}
 }

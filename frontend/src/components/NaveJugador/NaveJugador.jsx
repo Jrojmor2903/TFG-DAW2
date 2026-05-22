@@ -13,10 +13,10 @@ const NaveJugador = forwardRef(({ style }, ref) => {
       try {
         console.log("1 - userId:", user.id);
 
-        const resPerfil = await api.post("/perfil/getByUserId", { userId: user.id });
-        console.log("2 - resPerfil.data:", resPerfil.data);
+        const resPerfil = user.perfil
+        console.log(resPerfil);
 
-        const idNave = resPerfil.data.id_nave;
+        const idNave = resPerfil.id_nave;
 
         const resNave = await api.get(`/nave/${idNave}`);
 

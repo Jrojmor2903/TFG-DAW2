@@ -54,16 +54,21 @@ public function getByUserId(Request $request): JsonResponse
         return response()->json($perfil->load(['usuario', 'nave']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePerfilRequest $request, Perfil $perfil): JsonResponse
-    {
-        $perfil->update($request->validated());
+public function update(UpdatePerfilRequest $request, $id): JsonResponse
+{
+    $perfil = Perfil::where('id_usuario', $id)->firstOrFail();
+    $perfil->update($request->validated());
 
-        return response()->json($perfil->fresh(['usuario', 'nave']));
-    }
+    return response()->json($perfil);
+}
 
+public function updateNave(Request $request, $id): JsonResponse
+{
+    $perfil = Perfil::where('id_usuario', $id)->firstOrFail();
+    $perfil->update(['id_nave' => $request->id_nave]);
+
+    return response()->json($perfil);
+}
     /**
      * Remove the specified resource from storage.
      */

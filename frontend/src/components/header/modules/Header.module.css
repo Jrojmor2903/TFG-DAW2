@@ -7,7 +7,7 @@
     padding: 10px 40px;
     background-color: black;
     box-sizing: border-box;
-    border-bottom: #4AFFB7 2px solid;
+    border-bottom: var(--tema-visual) 2px solid;
 }
 
 .btn-menu {
@@ -39,13 +39,14 @@
 }
 
 .link {
+    font-family: orbitron;
     font-size: 30px;
     color: white;
     text-shadow:
-        0 0 5px #4AFFB7,
-        0 0 10px #4AFFB7,
-        0 0 20px #4AFFB7,
-        0 0 40px #4AFFB7;
+        0 0 5px var(--tema-visual),
+        0 0 10px var(--tema-visual),
+        0 0 20px var(--tema-visual),
+        0 0 40px var(--tema-visual);
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
@@ -53,8 +54,8 @@
 }
 
 .link:hover {
-    color: black;
-    text-shadow:
+    color: var(--tema-visual);
+        text-shadow:
         0 0 5px white,
         0 0 10px white,
         0 0 20px white,
@@ -62,7 +63,12 @@
 }
 
 .activo {
-    color: var(--rojo-principal);
+    color: var(--tema-visual);
+        text-shadow:
+        0 0 5px white,
+        0 0 10px white,
+        0 0 20px white,
+        0 0 40px white;
 }
 
 
@@ -103,4 +109,78 @@
         }
     }
 
+}
+
+.boton-hamburguesa {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.linea {
+  width: 2rem;
+  height: 0.25rem;
+  background: #ffffff;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+@media (max-width: 1230px) {
+  
+
+  .boton-hamburguesa {
+    display: flex;
+  }
+
+
+  .contenedor-navegador {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #0a0a0ac0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    padding-top: 4rem;
+    gap: 2rem; 
+    
+
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 5;
+  }
+
+
+  .menu-activo {
+    transform: translateX(0);
+  }
+
+
+  .link {
+    font-size: 1.5rem;
+  }
+
+
+  .boton-hamburguesa.abierto .linea:nth-child(1) {
+    transform: rotate(45deg);
+  }
+  .boton-hamburguesa.abierto .linea:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  .boton-hamburguesa.abierto .linea:nth-child(3) {
+    transform: rotate(-45deg);
+  }
 }

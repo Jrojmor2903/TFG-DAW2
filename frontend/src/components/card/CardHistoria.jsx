@@ -2,7 +2,7 @@ import { useUser } from "../../hooks/useUser";
 import ImagenNivel from "../imagenEffect/ImagenNivel";
 import { useNavigate } from "react-router-dom";
 
-function CardHistoria() {
+function CardHistoria( { className = "" } ) {
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -19,13 +19,13 @@ function CardHistoria() {
 
   return (
     <div
-      className={`card-inicio cursor-pointer text-a ${SombraText}`}
+      className={`card-inicio cursor-pointer text-a w-full h-full ${SombraText} ${className}`}
       onClick={() => {
         navigate("/juego");
       }}
     >
       <ImagenNivel nivel={user.nivel_actual} />
-      <h1 className="">Nivel {user.nivel_actual}</h1>
+      <h2>Nivel {user.nivel_actual}</h2>
     </div>
   );
 }

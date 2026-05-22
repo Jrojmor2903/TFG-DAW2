@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Rol;
+use App\Models\Logro;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -13,6 +14,8 @@ class UserSeeder extends Seeder
     {
         $adminRole = Rol::where('slug', 'admin')->first();
         $userRole  = Rol::where('slug', 'user')->first();
+        $adminLogros = Logro::where('id', '<=', 4)->get();
+        $ids = $adminLogros->pluck('id')->toArray();
 
         // Crear usuarios
         $admin = User::updateOrCreate(
@@ -33,5 +36,6 @@ class UserSeeder extends Seeder
 
         $admin->roles()->syncWithoutDetaching([$adminRole->id]);
         $user->roles()->syncWithoutDetaching([$userRole->id]);
+        $admin->logros()->syncWithoutDetaching($ids);  
     }
 }

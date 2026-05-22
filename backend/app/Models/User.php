@@ -32,7 +32,7 @@ class User extends Authenticatable
     }
     public function logros()
     {
-        return $this->belongsToMany(Logro::class, 'progresos');
+        return $this->belongsToMany(Logro::class, 'progresos', 'id_usuario', 'id_logro');
     }
 
     public function navesDesbloqueadas()
@@ -47,12 +47,18 @@ class User extends Authenticatable
 
     public function perfil()
     {
-        return $this->hasOne(Perfil::class);
+        return $this->hasOne(Perfil::class, 'id_usuario');
     }
 
     public function hasRole($slug)
     {
         return $this->roles()->where('slug', $slug)->exists();
+    }
+
+    public function isAdmin(): bool
+    {
+
+        return $this->roles()->where('slug', 'admin')->exists();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNaveRequest;
+use App\Http\Requests\UpdateNaveRequest;
 use App\Models\Nave;
 use Illuminate\Http\Request;
 use App\Services\NaveService;
@@ -58,7 +59,7 @@ class NaveController extends Controller
     /**
      * PUT/PATCH /api/naves/{nave}
      */
-    public function update(Request $request, Nave $nave)
+    public function update(UpdateNaveRequest $request, Nave $nave)
     {
         $naveActualizada = $this->naveService->updateDefault($request, $nave);
 

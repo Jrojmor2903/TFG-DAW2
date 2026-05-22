@@ -9,10 +9,15 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RolController;
 use App\Http\Controllers\Api\NaveController;
 use App\Http\Controllers\Api\PerfilController;
+use App\Http\Controllers\Api\LogroController;
+use App\Http\Controllers\Api\NivelController;
+use App\Http\Controllers\Api\EnemigoController;
 
 Route::post('login', [AuthController::class, 'login']);
 
 Route::post('/register', [UserController::class, 'store']);
+
+Route::post('/auth/check-token', [AuthController::class, 'tokenReg']);
 
 Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
@@ -22,17 +27,35 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::post('users/{id}/restore', [UserController::class, 'restore']);
     Route::delete('users/{id}/force', [UserController::class, 'forceDelete']);
 
+    Route::get('/user/check-admin', [UserController::class, 'checkAdmin']);
+    Route::patch('user/{id}/nivel', [UserController::class, 'actualizarNivel']);
+    Route::post('user/equipar-nave', [UserController::class, 'equiparNave']);
+    
     Route::post('/register', [UserController::class, 'store']);
 
+    Route::get('mis-logros/{id}', [UserController::class, 'misLogros']);
 
+    Route::apiResource('user', UserController::class);
+    
     Route::apiResource('rol', RolController::class);
 
-    Route::post('perfil/getByUserId', [PerfilController::class, 'getByUserId']);
+
+    Route::put('/perfil/usuario/{id}', [PerfilController::class, 'update']);
+    Route::put('/perfil/usuario/{id}/nave', [PerfilController::class, 'updateNave']);
+
 
     Route::apiResource('perfil', PerfilController::class);
     Route::apiResource('permiso', PermisoController::class);
+    
+    Route::apiResource('logro', LogroController::class);
 
     Route::apiResource('ranking', RankingController::class);
 
     Route::apiResource('nave', NaveController::class);
+
+    Route::get('nivel/total', [NivelController::class, 'total']);
+    Route::apiResource('nivel', NivelController::class);
+
+
+    Route::apiResource('enemigo', EnemigoController::class);
 });

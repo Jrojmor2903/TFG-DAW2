@@ -12,12 +12,10 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('id_usuario')->unique();
-            $table->unsignedBigInteger('id_nave')->unique();
+            $table->unsignedBigInteger('id_nave');
 
             $table->string('idioma')->default('es');
-            $table->string('tema_visual')->default('default');
-            $table->boolean('sonido')->default(true);
-            $table->string('dificultad')->default('normal');
+            $table->string('tema_visual')->default('59 130 246');
 
             $table->foreign('id_usuario')
                 ->references('id')

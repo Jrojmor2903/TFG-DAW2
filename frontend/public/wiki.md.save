@@ -1,0 +1,114 @@
+)
+
+---
+## 1. Bitácora del Proyecto
+
+### 1.1 Incidencias y Soluciones
+
+### 1.2 Planificación y Seguimiento
+
+#### Enero 22 a enero 29
+
+> Terminar de configurar el árbol de contenedores y realizar todas las migraciones y modelos de laravel y añadir algunos seeders y crear los contenedores con un composer.yml y varios dockefiles
+
+#### Enero 29 a Febrero 5
+
+> Crear los controladores, las request y el middleware y empezar a crear la api y el panel de administración
+
+#### Enero 5 a Febrero 27
+
+> Terminar el panel de administración y la api, seguir haciendo la fidelidad alta y empezar REACT
+
+#### Febrero 27 a Marzo 15
+
+> Empezar React, configurar llamadas al api, hacer login y contexto de usuario
+
+#### Marzo 15 a Abril
+
+> Maquetar la página con tailwind y empezar a hacer el juego en si.
+## 2. Bitácora de Incidencias y Soluciones
+
+### 🐛 [21/05] `auth()->user()` devuelve `null` en `misLogros`
+
+**Síntoma:** El método `misLogros` del `UserController` devolvía un error al intentar llamar a `->logros()` sobre `null`.
+
+**Causa:** La ruta no estaba protegida por el middleware `auth:sanctum`, o el token JWT/Sanctum no se enviaba correctamente en la cabecera `Authorization`.
+
+**Solución aplicada:** Se cambió la estrategia para no depender de `auth()->user()`. En su lugar, se pasa el `id` del usuario como parámetro en la URL, obteniéndolo desde el contexto de React (`useUser`):
+
+```php
+// routes/api.php
+Route::get('mis-logros/{id}', [UserController::class, 'misLogros']);
+
+// UserController.php
+public function misLogros($id)
+{
+    $user = User::findOrFail($id);
+    $logros = $user->logros()->get();
+    return response()->json($logros);
+}
+```
+
+```js
+// Logros.jsx
+api.get(`/mis-logros/${user.id}`)
+```
+
+---
+
+### 🐛 [21/05] `404 Not Found` en `GET /api/mis-logros/1`
+
+**Síntoma:** La petición llegaba al backend pero devolvía 404.
+
+**Causa probable:** La ruta no estaba registrada en `api.php`, o existía un prefijo de grupo que alteraba la URL final, o había caché de rutas desactualizada.
+
+**Solución:** Verificar con `php artisan route:list | grep logros` y limpiar caché:
+
+```bash
+php artisan route:clear
+php artisan cache:clear
+```
+
+---
+
+### 🐛 [21/05] Slider animado — el clic no activa el paso correcto
+
+**Síntoma:** Al hacer clic en un `<h3>` del slider, el paso no se mostraba o los estilos del modo manual no se aplicaban.
+
+**Causas encontradas:**
+
+1. **Especificidad CSS:** `.slider-steps.manual .step p` tenía la misma especificidad que `.slider-steps.manual .step.activo p`, ganando la primera por orden de aparición.
+2. **Timing del DOM:** El script se ejecutaba antes de que el HTML estuviera disponible.
+
+**Solución:**
+
+- Añadir `!important` en todos los valores del bloque `.manual` y `.activo`
+- Envolver el JS en `DOMContentLoaded`
+
+```js
+document.addEventListener('DOMContentLoaded', function() {
+    var slider = document.querySelector('.slider-steps');
+    // ...
+});
+```
+
+---
+
+### 🐛 [21/05] Texto del `<p>` cortado en el slider
+
+**Síntoma:** El texto de los pasos del slider se veía truncado.
+
+**Causa:** `max-height` en `@keyframes texto` y en `.step.activo p` estaba fijado a `120px` / `200px`, insuficiente para textos largos.
+
+**Solución:** Subir el valor a `500px` en ambos sitios:
+
+```css
+@keyframes texto {
+    10%  { max-height: 500px; opacity: 1; }
+    30%  { max-height: 500px; opacity: 1; }
+}
+
+.slider-steps.manual .step.activo p {
+    max-height: 500px !important;
+}
+```

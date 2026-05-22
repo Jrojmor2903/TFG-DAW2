@@ -9,9 +9,9 @@ class Perfil extends Model
 {
     use HasFactory;
 
-    protected $table = 'perfiles'; 
+    protected $table = 'perfiles';
+    public $timestamps = false; // ← añade esto 
     
-    protected $primaryKey = 'id_perfil';
 
     protected $fillable = [
         'id_usuario',

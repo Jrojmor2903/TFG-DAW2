@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre_nivel', 100)->unique();
             $table->string('dificultad');
-            $table->string('fondo_url');
+            $table->string('fondo_url')->nullable()->default("https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/uploads/fondo-nivel.png");
         });
     }
 
