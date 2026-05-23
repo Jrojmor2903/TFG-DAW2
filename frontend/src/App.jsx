@@ -43,6 +43,8 @@ function App() {
         </Route>
         
         <Route path="/juego" element={<RutaProtected><Juego /></RutaProtected>} />
+        <Route path="/juego/:nivelId" element={<RutaProtected><Juego /></RutaProtected>} />
+
       </Routes>
     </BrowserRouter>
   );

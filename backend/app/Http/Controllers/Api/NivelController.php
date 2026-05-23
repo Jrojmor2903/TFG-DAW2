@@ -27,15 +27,14 @@ public function total()
 }
 
 
-public function obtenerCreadores()
+public function creados()
 {
-    // Busca solo los usuarios que tengan al menos un nivel creado
-$creadores = User::has('niveles')->select('id', 'name')->get();
-    
-    return response()->json([
-        'success' => true,
-        'data' => $creadores
-    ]);
+    return response()->json(
+        Nivel::where('tipo', 'creado')
+            ->whereNotNull('id_creador')
+            ->with(['enemigos', 'creador:id,name'])
+            ->get()
+    );
 }
 
 public function show($id)

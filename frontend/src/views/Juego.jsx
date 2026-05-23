@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../hooks/useUser.jsx";
 import { useVerticalBG } from "../hooks/useVerticalBG.jsx";
 import { useHorizontalMovement } from "../hooks/useHorizontalMovement.jsx";
@@ -15,6 +15,10 @@ import api from "../components/axios/api.jsx";
 function Juego() {
   const { user, changeLevel } = useUser();
   const navigate = useNavigate();
+  const { nivelId } = useParams();
+
+  const esModoLibre = !!nivelId;
+  const nivelActualId = nivelId ? Number(nivelId) : user.nivel_actual;
 
   const [config, setConfig] = useState(null);
   const [tiposEnemigo, setTiposEnemigo] = useState([]);
@@ -29,12 +33,14 @@ function Juego() {
   useEffect(() => {
     const fetchDatos = async () => {
       try {
-        const nivelId = user.nivel_actual;
-        const resNivel = await api.get(`/nivel/${nivelId}`);
+        const resNivel = await api.get(`/nivel/${nivelActualId}`);
         const nivel = resNivel.data;
 
-        const resTotal = await api.get(`/nivel/total`);
-        const esUltimo = nivelId >= resTotal.data.total;
+        let esUltimo = false;
+        if (!esModoLibre) {
+          const resTotal = await api.get(`/nivel/total`);
+          esUltimo = nivelActualId >= resTotal.data.total;
+        }
 
         setConfig({
           velocidad: nivel.velocidad,
@@ -65,7 +71,7 @@ function Juego() {
     };
 
     if (user?.id) fetchDatos();
-  }, [user?.nivel_actual]);
+  }, [nivelActualId]);
 
   const {
     volumenMusica,
@@ -293,6 +299,7 @@ function Juego() {
         {nivelCompletado && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50">
             <div className="bg-gray-900 border border-yellow-400 rounded-2xl p-10 flex flex-col items-center gap-6 text-center">
+
               {config?.esUltimo ? (
                 <>
                   <h2 className="text-yellow-400 text-4xl font-bold">¡Historia completada!</h2>
@@ -302,6 +309,17 @@ function Juego() {
                     className="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black rounded-lg font-bold"
                   >
                     Salir
+                  </button>
+                </>
+              ) : esModoLibre ? (
+                <>
+                  <h2 className="text-yellow-400 text-4xl font-bold">¡Nivel completado!</h2>
+                  <p className="text-white text-lg">Has superado este desafío</p>
+                  <button
+                    onClick={() => navigate("/lista-niveles")}
+                    className="px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black rounded-lg font-bold"
+                  >
+                    Volver a niveles
                   </button>
                 </>
               ) : (
@@ -327,6 +345,7 @@ function Juego() {
                   </div>
                 </>
               )}
+
             </div>
           </div>
         )}
