@@ -45,6 +45,11 @@ class User extends Authenticatable
         );
     }
 
+
+    public function niveles()
+    {
+        return $this->hasMany(Nivel::class, 'id_creador');
+    }
     public function perfil()
     {
         return $this->hasOne(Perfil::class, 'id_usuario');

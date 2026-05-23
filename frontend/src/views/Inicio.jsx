@@ -1,7 +1,10 @@
 import CardHistoria from "../components/card/CardHistoria";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // 🚀 1. Importamos el hook
 
 function Inicio() {
+  const navigate = useNavigate(); // 🚀 2. Inicializamos el navigate
+
   const cards = [
     {
       key: "historia",
@@ -9,8 +12,7 @@ function Inicio() {
       label: "Modo Historia",
       isCardHistoria: true,
     },
-    { key: "practica", img: "/practica.png", label: "Modo Práctica" },
-
+    { key: "practica", img: "/practica.png", label: "Niveles Custom" },
     { key: "infinito", img: "/infinito-2.png", label: "Modo Infinito" },
   ];
 
@@ -26,6 +28,14 @@ function Inicio() {
 
   const prev = () => setCurrent((c) => (c - 1 + cards.length) % cards.length);
   const next = () => setCurrent((c) => (c + 1) % cards.length);
+
+  // 🚀 3. Función para controlar el click en las tarjetas
+  const handleCardClick = (key) => {
+    if (key === "practica") {
+      navigate("/lista-niveles"); // Redirige a tu nueva vista
+    }
+    // Si más adelante quieres programar el "Modo Infinito", añadirías otro 'if' aquí
+  };
 
   const getStyle = (index) => {
     const total = cards.length;
@@ -63,7 +73,7 @@ function Inicio() {
   return (
     <div className="background-general min-h-screen flex flex-col items-center justify-center">
       <div
-        className="relative w-full h-[420px] flex items-center justify-center overflow-hidden" // ← overflow-hidden aquí
+        className="relative w-full h-[420px] flex items-center justify-center overflow-hidden"
         style={{ perspective: "1000px" }}
       >
         <div className="relative w-[280px] h-[420px]">
@@ -78,11 +88,14 @@ function Inicio() {
             >
               {card.isCardHistoria ? (
                 <div className="w-[280px] h-[420px]">
-                  <CardHistoria className="w-full h-full" />{" "}
-                  {/* ← solo en móvil */}
+                  <CardHistoria className="w-full h-full" />
                 </div>
               ) : (
-                <div className="card-inicio cursor-pointer text-a w-full h-full">
+                /* 🚀 4. Añadimos el onClick pasando la key de la tarjeta actual */
+                <div 
+                  onClick={() => handleCardClick(card.key)} 
+                  className="card-inicio cursor-pointer text-a w-full h-full"
+                >
                   <img
                     src={card.img}
                     alt={card.label}

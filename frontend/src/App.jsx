@@ -13,6 +13,7 @@ import Nave from "./views/Nave.jsx";
 import AdminDashboard from "./views/AdminDashboard.jsx";
 import Register from "./views/Register.jsx";
 import CreadorNivel from "./views/CreadorNivel.jsx";
+import ListaNiveles from "./views/ListaNiveles.jsx";
 
 function App() {
   return (
@@ -28,9 +29,8 @@ function App() {
           <Route path="logros" element={<RutaProtected><Logros /></RutaProtected>} />
           <Route path="ranking" element={<RutaProtected><Ranking /></RutaProtected>} />
           <Route path="naves" element={<RutaProtected><Nave /></RutaProtected>} />
-
           <Route path="crear-nivel" element={<RutaCreador><CreadorNivel /></RutaCreador>} />
-
+          <Route path="lista-niveles" element={<RutaProtected><ListaNiveles /></RutaProtected>} />
 
           <Route 
             path="admin" 

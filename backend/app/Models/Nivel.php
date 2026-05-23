@@ -26,4 +26,8 @@ class Nivel extends Model
             'id_enemigo'
         )->withPivot('cantidad');
     }
+    public function creador()
+    {
+        return $this->belongsTo(User::class, 'id_creador');
+    }
 }

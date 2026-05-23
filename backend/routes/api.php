@@ -53,8 +53,12 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('ranking', RankingController::class);
 
-    Route::apiResource('nave', NaveController::class);
 
+    
+    
+    Route::apiResource('nave', NaveController::class);
+    
+    Route::get('/nivel/creadores', [NivelController::class, 'obtenerCreadores']);
     Route::get('nivel/total', [NivelController::class, 'total']);
     Route::apiResource('nivel', NivelController::class);
 

@@ -7,7 +7,7 @@ function RutaCreador({ children }) {
 
   if (loading) return <LoadingPage />;
   if (!user) return <Navigate to="/login" />;
-  if (!roles?.some(r => r.nombre === "cread" || r.nombre === "admin")) {
+  if (!roles?.some(r => r.slug === "creador" || r.slug === "admin")) {
     return <Navigate to="/" />;
   }
 

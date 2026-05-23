@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNivelRequest;
 use App\Http\Requests\UpdateNivelRequest;
 use App\Models\Nivel;
+use App\Models\User;
 use App\Services\NivelService;
 
 class NivelController extends Controller
@@ -14,16 +15,27 @@ class NivelController extends Controller
         protected NivelService $nivelService
     ) {}
 
-    public function index()
-    {
-        return response()->json(
-            Nivel::with('enemigos')->get()
-        );
-    }
+public function index()
+{
+    $niveles = Nivel::with(['creador:id,name', 'enemigos'])->get();
+    return response()->json($niveles);
+}
 
 public function total()
 {
     return response()->json(['total' => Nivel::max('id')]);
+}
+
+
+public function obtenerCreadores()
+{
+    // Busca solo los usuarios que tengan al menos un nivel creado
+$creadores = User::has('niveles')->select('id', 'name')->get();
+    
+    return response()->json([
+        'success' => true,
+        'data' => $creadores
+    ]);
 }
 
 public function show($id)

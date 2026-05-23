@@ -9,7 +9,7 @@ const Header = () => {
   const [menuAbierto, setMenuAbierto] = useState(false); // 👈 Estado para controlar el menú
 
   const isAdmin = !loading && user && roles?.some(role => role.slug === "admin");
-  const isCreador = !loading && user && roles?.some(role => role.slug === "cread");
+  const isCreador = !loading && user && roles?.some(role => role.slug === "creador");
 
   // Función para cerrar el menú al hacer clic en un enlace (comportamiento móvil ideal)
   const cerrarMenu = () => setMenuAbierto(false);
@@ -54,6 +54,18 @@ const Header = () => {
             }
           >
             Panel Admin
+          </NavLink>
+        )}
+
+          {(isCreador || isAdmin) && (
+          <NavLink 
+            to="/crear-nivel" 
+            onClick={cerrarMenu}
+            className={({ isActive }) =>
+              isActive ? `${styles["link"]} ${styles["activo"]}` : styles["link"]
+            }
+          >
+            Crear Nivel
           </NavLink>
         )}
 
