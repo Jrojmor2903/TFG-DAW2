@@ -18,7 +18,7 @@ export default function ListaNiveles() {
       try {
         // Traemos los niveles y los usuarios/creadores en paralelo
         const [resNiveles, resUsuarios] = await Promise.all([
-          api.get("/nivel"),
+          api.get("/nivel/creados"),
           api.get("/nivel/creadores"),
         ]);
 

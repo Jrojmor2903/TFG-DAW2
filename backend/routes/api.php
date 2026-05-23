@@ -58,8 +58,9 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
     
     Route::apiResource('nave', NaveController::class);
     
-    Route::get('/nivel/creadores', [NivelController::class, 'obtenerCreadores']);
     Route::get('nivel/total', [NivelController::class, 'total']);
+    Route::get('nivel/creadores', [NivelController::class, 'obtenerCreadores']);
+    Route::get('nivel/creados', [NivelController::class, 'creados']);
     Route::apiResource('nivel', NivelController::class);
 
 

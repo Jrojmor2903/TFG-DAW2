@@ -15,38 +15,49 @@ class NivelController extends Controller
         protected NivelService $nivelService
     ) {}
 
-public function index()
-{
-    $niveles = Nivel::with(['creador:id,name', 'enemigos'])->get();
-    return response()->json($niveles);
-}
+    public function index()
+    {
+        $niveles = Nivel::with(['creador:id,name', 'enemigos'])->get();
+        return response()->json($niveles);
+    }
 
-public function total()
-{
-    return response()->json(['total' => Nivel::max('id')]);
-}
+    public function total()
+    {
+        return response()->json(['total' => Nivel::max('id')]);
+    }
 
+    public function creados()
+    {
+        return response()->json(
+            Nivel::where('tipo', 'creado')
+                ->whereNotNull('id_creador')
+                ->with(['enemigos', 'creador:id,name'])
+                ->get()
+        );
+    }
 
-public function creados()
-{
-    return response()->json(
-        Nivel::where('tipo', 'creado')
-            ->whereNotNull('id_creador')
-            ->with(['enemigos', 'creador:id,name'])
-            ->get()
-    );
-}
+    /* ==========================================================================
+       🚀 NUEVO MÉTODO: Obtener creadores únicos para el filtro del Frontend
+       ========================================================================== */
+    public function obtenerCreadores()
+    {
+        // Trae solo los usuarios que tienen al menos un nivel asociado en la base de datos
+        $creadores = User::has('niveles')->select('id', 'name')->get();
+        
+        return response()->json($creadores);
+    }
 
-public function show($id)
-{
-    $nivel = Nivel::with('enemigos')->findOrFail($id);
-    $totalNiveles = Nivel::count();
-    
-    $data = $nivel->toArray();
-    $data['es_ultimo'] = $nivel->id === $totalNiveles; // o Nivel::max('id')
-    
-    return response()->json($data);
-}
+    public function show($id)
+    {
+        $nivel = Nivel::with('enemigos')->findOrFail($id);
+        $totalNiveles = Nivel::count();
+        
+        $data = $nivel->toArray();
+        $data['es_ultimo'] = $nivel->id === $totalNiveles; // o Nivel::max('id')
+        
+        return response()->json($data);
+    }
+
     public function store(StoreNivelRequest $request)
     {
         $nivel = $this->nivelService->store(
