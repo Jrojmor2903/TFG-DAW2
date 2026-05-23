@@ -11,7 +11,9 @@ class Nivel extends Model
     protected $fillable = [
         "nombre_nivel",
         "dificultad",
-        "fondo_url"
+        "fondo_url",
+        "tipo",
+        "id_creador",
     ];
 
 

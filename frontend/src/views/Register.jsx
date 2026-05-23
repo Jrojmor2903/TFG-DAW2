@@ -25,6 +25,7 @@ function Register() {
         email,
         password,
         password_confirmation: passwordConfirmation,
+        rol: [2],
       });
 
       navigate("/login");

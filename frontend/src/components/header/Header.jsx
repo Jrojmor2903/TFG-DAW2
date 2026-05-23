@@ -9,6 +9,7 @@ const Header = () => {
   const [menuAbierto, setMenuAbierto] = useState(false); // 👈 Estado para controlar el menú
 
   const isAdmin = !loading && user && roles?.some(role => role.slug === "admin");
+  const isCreador = !loading && user && roles?.some(role => role.slug === "cread");
 
   // Función para cerrar el menú al hacer clic en un enlace (comportamiento móvil ideal)
   const cerrarMenu = () => setMenuAbierto(false);

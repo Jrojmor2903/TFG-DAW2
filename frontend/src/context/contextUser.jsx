@@ -72,21 +72,41 @@ export function UserProvider({ children }) {
 
   let saving = false;
 
-async function changeLevel(newLevel) {
-    setUser(prev => {
-        const updated = { ...prev, nivel_actual: newLevel };
-        localStorage.setItem("user", JSON.stringify(updated)); // ← añade esto
-        return updated;
+  async function changeLevel(newLevel) {
+    setUser((prev) => {
+      const updated = { ...prev, nivel_actual: newLevel };
+      localStorage.setItem("user", JSON.stringify(updated)); // ← añade esto
+      return updated;
     });
 
     try {
-        await api.patch(`/user/${user.id}/nivel`, {
-            nivel_actual: newLevel
-        });
+      await api.patch(`/user/${user.id}/nivel`, {
+        nivel_actual: newLevel,
+      });
     } catch (err) {
-        console.error("Error actualizando nivel:", err.response?.data);
+      console.error("Error actualizando nivel:", err.response?.data);
     }
-}
+  }
+
+  async function updateAvatar(file) {
+    if (!user) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+    formData.append("nombreImg", user.name);
+
+    try {
+      const res = await api.post(`/user/${user.id}/avatar`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const updatedUser = { ...user, avatar_url: res.data.avatar_url };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    } catch (err) {
+      setError("Error al subir el avatar: " + err);
+    }
+  }
 
   // --- NUEVA FUNCIÓN AÑADIDA SIN ALTERAR EL RESTO ---
   async function equiparNave(nave) {
@@ -97,8 +117,8 @@ async function changeLevel(newLevel) {
       ...user,
       perfil: {
         ...user.perfil,
-        id_nave: nave.id
-      }
+        id_nave: nave.id,
+      },
     };
 
     setUser(updatedUser);
@@ -110,8 +130,8 @@ async function changeLevel(newLevel) {
 
     try {
       // Ajusta este endpoint según la ruta que manejes en tu Laravel API
-      await api.post("/user/equipar-nave", { 
-        nave_id: nave.id 
+      await api.post("/user/equipar-nave", {
+        nave_id: nave.id,
       });
     } catch (err) {
       setError("Error al equipar la nave en el servidor: " + err);
@@ -129,6 +149,7 @@ async function changeLevel(newLevel) {
         login,
         logout,
         changeLevel,
+        updateAvatar,
         equiparNave, // Expuesta correctamente para ser consumida mediante useUser()
         loading,
         error,

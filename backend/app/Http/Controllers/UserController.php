@@ -8,19 +8,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
+use App\Services\ImagenService;
 
 class UserController extends Controller
 {
 
     protected $userService;
 
+    protected $imagenService;
 
     public function __construct(
 
         UserService $userService,
+        ImagenService $imagenService
 
     ) {
         $this->userService = $userService;
+        $this->imagenService = $imagenService;
     }
 
     /**
@@ -120,4 +124,28 @@ class UserController extends Controller
         return redirect()->route('user.deleted')
             ->with('success', 'Usuario eliminado permanentemente');
     }
+
+
+    public function updateAvatar(Request $request, $id)
+{
+    $request->validate([
+        'avatar' => 'required|image|max:2048',
+    ]);
+
+    $user = User::findOrFail($id);
+
+    if ($user->avatar_url) {
+        $this->imagenService->deleteImageField($user, 'avatar_url');
+    }
+
+    $url = $this->imagenService->subir(
+        $request->file('avatar'),
+        $request->nombreImg ?? $user->name
+    );
+
+    $user->avatar_url = $url;
+    $user->save();
+
+    return response()->json($user);
+}
 }

@@ -2,7 +2,7 @@ import Login from "./views/Login.jsx";
 import Juego from "./views/Juego.jsx";
 import Inicio from "./views/Inicio.jsx";
 import RutaProtected from "./components/rutasProtec/RutaProtected.jsx";
-
+import RutaCreador from "./components/rutasProtec/RutaCreador.jsx";
 import RutaAdmin from "./components/rutasProtec/RutaAdmin.jsx";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Biglayout from "./components/biglayout/BigLayout.jsx";
@@ -12,6 +12,7 @@ import Ranking from "./views/Ranking.jsx";
 import Nave from "./views/Nave.jsx";
 import AdminDashboard from "./views/AdminDashboard.jsx";
 import Register from "./views/Register.jsx";
+import CreadorNivel from "./views/CreadorNivel.jsx";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
           <Route path="logros" element={<RutaProtected><Logros /></RutaProtected>} />
           <Route path="ranking" element={<RutaProtected><Ranking /></RutaProtected>} />
           <Route path="naves" element={<RutaProtected><Nave /></RutaProtected>} />
+
+          <Route path="crear-nivel" element={<RutaCreador><CreadorNivel /></RutaCreador>} />
+
+
           <Route 
             path="admin" 
             element={

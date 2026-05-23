@@ -7,6 +7,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    allowedHosts: ["localhost", ".ngrok-free.dev"],
+    allowedHosts: ["localhost", ".vercel.app", ".ngrok-free.dev"],
   },
 });
