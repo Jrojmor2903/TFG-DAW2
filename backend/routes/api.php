@@ -31,7 +31,7 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
     // ── con {id} después ──
     Route::post('users/{id}/restore', [UserController::class, 'restore']);
     Route::delete('users/{id}/force', [UserController::class, 'forceDelete']);
-    Route::post('user/{id}/avatar', [UserController::class, 'updateAvatar']);
+    Route::post('user/{id}/avatar', [UserController::class, 'updateAvatarProfile']);
     Route::patch('user/{id}/nivel', [UserController::class, 'actualizarNivel']);
 
     Route::get('mis-logros/{id}', [UserController::class, 'misLogros']);

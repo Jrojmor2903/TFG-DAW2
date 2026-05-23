@@ -126,26 +126,26 @@ class UserController extends Controller
     }
 
 
-    public function updateAvatar(Request $request, $id)
-{
-    $request->validate([
-        'avatar' => 'required|image|max:2048',
-    ]);
+   public function updateAvatarProfile(Request $request, $id)
+    {
+        // 1. Buscamos al usuario de la base de datos
+        $user = User::findOrFail($id);
 
-    $user = User::findOrFail($id);
+        // 2. Validamos que si se envía el avatar, cumpla las especificaciones de imagen
+        $request->validate([
+            'avatar'    => 'required|image|max:2048', // Máximo 2MB
+            'nombreImg' => 'nullable|string|max:255'
+        ]);
 
-    if ($user->avatar_url) {
-        $this->imagenService->deleteImageField($user, 'avatar_url');
+        // 3. Reutilizamos tu lógica de negocio del userService
+        // Tu updateDefault se encargará de borrar el viejo S3, subir el nuevo usando tu ImagenService
+        // y hacer el $user->update()
+        $userActualizado = $this->userService->updateDefault($request, $user);
+
+        // 4. Retornamos el objeto refrescado con la nueva avatar_url generada por tu ImagenService
+        return response()->json([
+            'message' => 'Avatar actualizado en la nube',
+            'data'    => $userActualizado
+        ], 200);
     }
-
-    $url = $this->imagenService->subir(
-        $request->file('avatar'),
-        $request->nombreImg ?? $user->name
-    );
-
-    $user->avatar_url = $url;
-    $user->save();
-
-    return response()->json($user);
-}
 }

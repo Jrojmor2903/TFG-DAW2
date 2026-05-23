@@ -88,7 +88,7 @@ export function UserProvider({ children }) {
     }
   }
 
-  async function updateAvatar(file) {
+async function updateAvatar(file) {
     if (!user) return;
 
     const formData = new FormData();
@@ -100,11 +100,19 @@ export function UserProvider({ children }) {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const updatedUser = { ...user, avatar_url: res.data.avatar_url };
+      const nuevaUrl = res.data.avatar_url;
+      
+      const updatedUser = { 
+        ...user, 
+        ...(res.data.data || {}),
+        avatar_url: nuevaUrl
+      };
+
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
     } catch (err) {
-      setError("Error al subir el avatar: " + err);
+      const errorMsg = err.response?.data?.message || err.message || err;
+      setError("Error al subir el avatar: " + errorMsg);
     }
   }
 

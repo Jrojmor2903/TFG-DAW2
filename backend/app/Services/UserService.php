@@ -54,43 +54,50 @@ class UserService
         }
     }
 
-    public function updateDefault($request, $user)
-    {
-        DB::beginTransaction();
+public function updateDefault($request, $user)
+{
+    DB::beginTransaction();
 
-        try {
-            $avatarUrl = $user->avatar_url;
+    try {
+        // 1. Por defecto, mantenemos el avatar actual del usuario
+        $avatarUrl = $user->avatar_url;
 
-
-            if ($request->hasFile('avatar')) {
-
-                if ($avatarUrl) {
-                    $path = 'uploads/' . basename($avatarUrl);
-                    Storage::disk('s3')->delete($path);
-                }
-                $avatarUrl = $this->imagenService->subir($request->file('avatar'), $request->nombreImg ?? '');
-            }
-            $datos = [
-                'name'       => $request->name,
-                'email'      => $request->email,
-                'avatar_url' => $avatarUrl,
-            ];
-
-            if ($request->filled('password')) {
-                $datos['password'] = $request->password;
-            }
-
-            $user->update($datos);
-
-            $user->roles()->sync($request->rol);
-            DB::commit();
-            return $user;
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            throw new Exception('Ha ocurrido un error durante la actualización del usuario: ' . $e->getMessage());
+        // 2. CASO A: Si el Administrador pegó una URL de texto (viene como string en 'avatar_url')
+        if ($request->filled('avatar_url')) {
+            $avatarUrl = $request->avatar_url;
         }
+        
+        // 3. CASO B: Si se subió un archivo físico real (pesa más y sobrescribe el texto)
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar_url) {
+                $path = 'uploads/' . basename($user->avatar_url);
+                Storage::disk('s3')->delete($path);
+            }
+            $avatarUrl = $this->imagenService->subir($request->file('avatar'), $request->nombreImg ?? '');
+        }
+
+        $datos = [
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'avatar_url' => $avatarUrl, // 🚀 Ahora sí llevará la nueva URL de texto si se editó
+        ];
+
+        if ($request->filled('password')) {
+            $datos['password'] = $request->password; // Recuerda asegurarte si tu modelo tiene un Mutator para encriptarla, o ponle Hash::make() aquí si no lo tiene.
+        }
+
+        $user->update($datos);
+
+        // Sincronizar roles
+        $user->roles()->sync($request->rol);
+        
+        DB::commit();
+        return $user;
+    } catch (Exception $e) {
+        DB::rollBack();
+        throw new Exception('Ha ocurrido un error durante la actualización del usuario: ' . $e->getMessage());
     }
+}
     public function deleteDefault($url)
     {
         if (!$url) {
