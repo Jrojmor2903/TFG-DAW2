@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -30,23 +32,45 @@ class UserController extends Controller
     }
     
 
-    public function updateAvatarProfile(Request $request, $id)
+    public function updateAvatarProfile(Request $request, $id): JsonResponse
     {
         $user = User::findOrFail($id);
 
-        $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'avatar'    => 'required|image|max:2048',
             'nombreImg' => 'nullable|string|max:255'
         ]);
 
-        // 🚀 Si no hiciste los pasos 1, 2 y 3, esta línea revienta con un Error 500
-        $userActualizado = $this->userService->updateDefault($request, $user);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
 
-        return response()->json([
-            'message'    => 'Avatar actualizado correctamente.',
-            'avatar_url' => $userActualizado->avatar_url,
-            'data'       => $userActualizado
-        ], 200);
+        $request->merge([
+            'name'  => $user->name,
+            'email' => $user->email,
+            'rol'   => $user->roles->pluck('id')->toArray()
+        ]);
+
+        try {
+
+            $userActualizado = $this->userService->updateDefault($request, $user);
+
+            return response()->json([
+                'message'    => 'Avatar actualizado correctamente.',
+                'avatar_url' => $userActualizado->avatar_url,
+                'data'       => $userActualizado
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error interno en el servidor al procesar el avatar',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function equiparNave(Request $request)
