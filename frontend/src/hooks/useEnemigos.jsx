@@ -7,7 +7,7 @@ export function useEnemigos(
   pausado = false,
   onGameOver,
   config = {},
-  tiposEnemigo = []   // 👈 nuevo parámetro
+  tiposEnemigo = [] 
 ) {
   const {
     velocidad = 80,

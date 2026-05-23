@@ -29,6 +29,26 @@ class UserController extends Controller
         return response()->json($user);
     }
     
+
+    public function updateAvatarProfile(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'avatar'    => 'required|image|max:2048',
+            'nombreImg' => 'nullable|string|max:255'
+        ]);
+
+        // 🚀 Si no hiciste los pasos 1, 2 y 3, esta línea revienta con un Error 500
+        $userActualizado = $this->userService->updateDefault($request, $user);
+
+        return response()->json([
+            'message'    => 'Avatar actualizado correctamente.',
+            'avatar_url' => $userActualizado->avatar_url,
+            'data'       => $userActualizado
+        ], 200);
+    }
+
     public function equiparNave(Request $request)
     {
         $user = User::findOrFail($request->user_id);

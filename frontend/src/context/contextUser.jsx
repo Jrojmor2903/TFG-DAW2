@@ -89,32 +89,33 @@ export function UserProvider({ children }) {
   }
 
 async function updateAvatar(file) {
-    if (!user) return;
+  if (!user) return;
 
-    const formData = new FormData();
-    formData.append("avatar", file);
-    formData.append("nombreImg", user.name);
+  const formData = new FormData();
+  formData.append("avatar", file);
+  formData.append("nombreImg", user.name);
 
-    try {
-      const res = await api.post(`/user/${user.id}/avatar`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+  try {
+    const res = await api.post(`/user/${user.id}/avatar`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-      const nuevaUrl = res.data.avatar_url;
-      
-      const updatedUser = { 
-        ...user, 
-        ...(res.data.data || {}),
-        avatar_url: nuevaUrl
-      };
+    // 🚀 Extracción limpia de la respuesta del servidor
+    const nuevaUrl = res.data.avatar_url;
 
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || err.message || err;
-      setError("Error al subir el avatar: " + errorMsg);
-    }
+    const updatedUser = { 
+      ...user, 
+      ...(res.data.data || {}), // Acoplamos el payload completo si viene mapeado
+      avatar_url: nuevaUrl      // Sobrescribimos con la URL final de S3/Supabase
+    };
+
+    // Actualizamos Estado y LocalStorage de manera síncrona
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  } catch (err) {
+    setError("Error al subir el avatar: " + err);
   }
+}
 
   // --- NUEVA FUNCIÓN AÑADIDA SIN ALTERAR EL RESTO ---
   async function equiparNave(nave) {

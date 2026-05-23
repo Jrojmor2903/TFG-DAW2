@@ -35,11 +35,17 @@ class LogroSeeder extends Seeder
                 'descripcion' => 'Ejemplo',
                 'url' => "https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/uploads/logro-4.webp",
             ]
-            
         ];
 
         foreach ($logros as $logro) {
-            Logro::create($logro);
+
+            Logro::updateOrCreate(
+                ['nombre' => $logro['nombre']], 
+                [
+                    'descripcion' => $logro['descripcion'],
+                    'url'         => $logro['url']
+                ] 
+            );
         }
     }
 }

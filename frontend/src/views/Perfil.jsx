@@ -25,7 +25,10 @@ function Perfil() {
   // ── Fetch nave ──
   useEffect(() => {
     async function fetchNave() {
-      if (!user?.perfil?.id_nave) { setLoadingNave(false); return; }
+      if (!user?.perfil?.id_nave) {
+        setLoadingNave(false);
+        return;
+      }
       try {
         setLoadingNave(true);
         setErrorNave(false);
@@ -49,7 +52,7 @@ function Perfil() {
         setErrorRanking(false);
         const res = await api.get(`/ranking`);
         const lista = res.data.data || res.data || [];
-        const posicion = lista.findIndex(r => r.id_usuario === user.id);
+        const posicion = lista.findIndex((r) => r.id_usuario === user.id);
         setRanking({
           posicion: posicion >= 0 ? posicion + 1 : "-",
           puntos: lista[posicion]?.puntuacion ?? 0,
@@ -95,109 +98,164 @@ function Perfil() {
   };
 
   if (!user) {
-    return <div className="text-white text-center mt-10">Cargando perfil...</div>;
+    return (
+      <div className="text-white text-center mt-10">Cargando perfil...</div>
+    );
   }
 
   return (
-    <div className="background-general min-h-screen grid grid-cols-1 md:grid-cols-2 gap-6 p-4 sm:p-10 lg:p-20">
+    <>
+      {/* 🚀 INYECCIÓN DE MEDIA QUERY PERSONALIZADA A 870PX */}
+      <style>{`
+        .custom-profile-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        .card-usuario-completa {
+          grid-column: 1 / -1;
+        }
+        @media (min-width: 870px) {
+          .custom-profile-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+          .card-nave-lateral {
+            grid-row: span 2 / span 2;
+          }
+        }
+      `}</style>
 
-      {/* Usuario */}
-      <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-evenly items-center bg-(--negro-opacity) rounded-xl border border-(--tema-visual) p-6 gap-6">
-        <div
-          className="relative group cursor-pointer flex-shrink-0"
-          onClick={() => document.getElementById('avatarInput').click()}
-        >
-          <img
-            className="rounded-full w-32 sm:w-40 md:w-50 object-cover aspect-square"
-            src={user.avatar_url}
-            alt="User Foto"
-          />
-          <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-            <span className="text-white text-sm font-bold">
-              {subiendoAvatar ? "Subiendo..." : "Cambiar"}
-            </span>
-          </div>
-          <input
-            id="avatarInput"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleAvatar}
-          />
-        </div>
-
-        <h1 className="text-3xl sm:text-4xl md:text-5xl text-white text-sh-tema font-bold text-center">
-          {user.name}
-        </h1>
-
-        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10">
-          <h2 className="text-xl sm:text-2xl md:text-3xl text-white text-sh-tema">Color de Perfil</h2>
-          <ColorTheme />
-        </div>
-      </div>
-
-      {/* Nave */}
-      <div className="md:row-span-2 bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-center p-6 min-h-[300px]">
-        <h2 className="text-3xl md:text-5xl text-white text-sh-tema mb-4">Nave Actual</h2>
-        {loadingNave ? (
-          <p className="text-white/40 animate-pulse">Cargando nave...</p>
-        ) : errorNave ? (
-          <p className="text-red-400">Error al cargar la nave</p>
-        ) : nave ? (
-          <>
-            <img className="h-60 sm:h-72 md:h-90 object-contain" src={nave.avatar_url || nave.imagen_url} alt="Nave" />
-            <p className="text-white/60 text-lg mt-4">{nave.nombre}</p>
-          </>
-        ) : (
-          <p className="text-white/40">Sin nave equipada</p>
-        )}
-      </div>
-
-      {/* Rankings */}
-      <div className="bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-center p-6 min-h-[150px] gap-4">
-        <h2 className="text-3xl md:text-4xl text-white text-sh-tema">Rankings</h2>
-        {loadingRanking ? (
-          <p className="text-white/40 animate-pulse">Cargando...</p>
-        ) : errorRanking ? (
-          <p className="text-red-400">Error al cargar el ranking</p>
-        ) : ranking ? (
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-6xl md:text-8xl font-bold text-white text-sh-tema">
-              #{ranking.posicion}
-            </span>
-            <span className="text-white/60 text-lg">{ranking.puntos} puntos</span>
-          </div>
-        ) : (
-          <p className="text-white/40 text-lg">Sin partidas jugadas</p>
-        )}
-      </div>
-
-      {/* Logros */}
-      <div className="bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-center p-6 min-h-[150px] gap-4">
-        <h2 className="text-3xl md:text-4xl text-white text-sh-tema">Logros</h2>
-        {loadingLogros ? (
-          <p className="text-white/40 animate-pulse">Cargando...</p>
-        ) : errorLogros ? (
-          <p className="text-red-400">Error al cargar los logros</p>
-        ) : (
-          <>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-6xl md:text-8xl font-bold text-white text-sh-tema">
-                {logros.conseguidos}/{logros.total}
+      <div className="background-general min-h-screen custom-profile-grid gap-6 p-4 sm:p-10 lg:p-20">
+        {/* Usuario */}
+        <div className="card-usuario-completa flex flex-col lg:flex-row justify-evenly items-center bg-(--negro-opacity) rounded-xl border border-(--tema-visual) p-6 gap-6">
+          {/* Contenedor del Avatar */}
+          <div
+            className="relative group cursor-pointer flex-shrink-0"
+            onClick={() => document.getElementById("avatarInput").click()}
+          >
+            <img
+              className="rounded-full w-32 sm:w-40 md:w-44 object-cover aspect-square border-2 border-dashed border-white/20 group-hover:border-(--tema-visual) transition-all"
+              src={user.avatar_url}
+              alt="User Foto"
+            />
+            <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+              <span className="text-white text-xs font-mono tracking-wider uppercase font-bold bg-black/40 px-2 py-1 rounded">
+                {subiendoAvatar ? "Cargando..." : "Cambiar"}
               </span>
-              <span className="text-white/60 text-lg">conseguidos</span>
             </div>
-            <div className="w-full bg-white/10 rounded-full h-3 mt-2">
-              <div
-                className="h-3 rounded-full bg-(--tema-visual) transition-all duration-500"
-                style={{ width: logros.total > 0 ? `${(logros.conseguidos / logros.total) * 100}%` : "0%" }}
-              />
-            </div>
-          </>
-        )}
-      </div>
+            <input
+              id="avatarInput"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatar}
+            />
+          </div>
 
-    </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl text-white text-sh-tema font-bold text-center whitespace-nowrap">
+            {user.name}
+          </h1>
+
+          <div className="flex flex-col items-center justify-center min-w-[200px] gap-3 bg-black/20 p-4 rounded-lg border border-white/5">
+            <h2 className="text-lg sm:text-xl text-white text-sh-tema font-medium whitespace-nowrap">
+              Color de Perfil
+            </h2>
+            <div className="flex items-center gap-3">
+              <ColorTheme />
+            </div>
+          </div>
+        </div>
+
+        {/* Nave */}
+        <div className="card-nave-lateral bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-center p-6 min-h-[300px]">
+          <h2 className="text-3xl md:text-5xl text-white text-sh-tema mb-4">
+            Nave Actual
+          </h2>
+          {loadingNave ? (
+            <p className="text-white/40 animate-pulse">Cargando nave...</p>
+          ) : errorNave ? (
+            <p className="text-red-400 text-sm font-mono">
+              Error al cargar la nave
+            </p>
+          ) : nave ? (
+            <>
+              <img
+                className="h-60 sm:h-72 md:h-90 object-contain animate-float"
+                src={nave.avatar_url || nave.imagen_url}
+                alt="Nave"
+              />
+              <p className="text-white/60 text-lg mt-4 font-mono tracking-widest">
+                {nave.nombre}
+              </p>
+            </>
+          ) : (
+            <p className="text-white/40 font-mono text-sm">Sin nave equipada</p>
+          )}
+        </div>
+
+        {/* Rankings */}
+        <div className="bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-center p-6 min-h-[150px] gap-4">
+          <h2 className="text-3xl md:text-4xl text-white text-sh-tema">
+            Rankings
+          </h2>
+          {loadingRanking ? (
+            <p className="text-white/40 animate-pulse">Cargando...</p>
+          ) : errorRanking ? (
+            <p className="text-red-400 text-sm font-mono">
+              Error al cargar el ranking
+            </p>
+          ) : ranking ? (
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-6xl md:text-8xl font-bold text-white text-sh-tema animate-pulse">
+                #{ranking.posicion}
+              </span>
+              <span className="text-white/60 text-lg font-mono">
+                {ranking.puntos} puntos
+              </span>
+            </div>
+          ) : (
+            <p className="text-white/40 text-lg font-mono">
+              Sin partidas jugadas
+            </p>
+          )}
+        </div>
+
+        {/* Logros */}
+        <div className="bg-(--negro-opacity) rounded-xl border border-(--tema-visual) flex flex-col items-center justify-center p-6 min-h-[150px] gap-4">
+          <h2 className="text-3xl md:text-4xl text-white text-sh-tema">
+            Logros
+          </h2>
+          {loadingLogros ? (
+            <p className="text-white/40 animate-pulse">Cargando...</p>
+          ) : errorLogros ? (
+            <p className="text-red-400 text-sm font-mono">
+              Error al cargar los logros
+            </p>
+          ) : (
+            <>
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-6xl md:text-8xl font-bold text-white text-sh-tema">
+                  {logros.conseguidos}/{logros.total}
+                </span>
+                <span className="text-white/60 text-lg font-mono">
+                  conseguidos
+                </span>
+              </div>
+              <div className="w-full bg-white/10 rounded-full h-3 mt-2 overflow-hidden">
+                <div
+                  className="h-3 rounded-full bg-(--tema-visual) transition-all duration-700 ease-out"
+                  style={{
+                    width:
+                      logros.total > 0
+                        ? `${(logros.conseguidos / logros.total) * 100}%`
+                        : "0%",
+                  }}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 
