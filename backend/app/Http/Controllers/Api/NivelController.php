@@ -58,14 +58,16 @@ class NivelController extends Controller
         return response()->json($data);
     }
 
-    public function store(StoreNivelRequest $request)
-    {
-        $nivel = $this->nivelService->store(
-            $request->validated()
-        );
+public function store(StoreNivelRequest $request)
+{
 
-        return response()->json($nivel, 201);
-    }
+    $nivel = $this->nivelService->store(
+        $request->all(),
+        $request->id_creador
+    );
+
+    return response()->json($nivel->load('enemigos'), 201);
+}
 
     public function update(UpdateNivelRequest $request, Nivel $nivel)
     {

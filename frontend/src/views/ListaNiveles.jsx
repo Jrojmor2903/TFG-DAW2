@@ -23,6 +23,7 @@ export default function ListaNiveles() {
         ]);
 
         setNiveles(resNiveles.data.data || resNiveles.data || []);
+        console.log("niveles:", resNiveles.data);
         setCreadores(resUsuarios.data.data || resUsuarios.data || []);
       } catch (err) {
         setError("Error al cargar los datos de los niveles.");
@@ -86,7 +87,7 @@ export default function ListaNiveles() {
             </label>
             <select
               value={filtroCreadorId}
-              onChange={(e) => setFiltorCreadorId(e.target.value)}
+              onChange={(e) => setFiltroCreadorId(e.target.value)}
               className="w-full bg-neutral-900 border border-neutral-800 focus:border-[var(--tema-visual)] rounded-xl p-3 text-sm text-white focus:outline-none transition-all cursor-pointer"
             >
               <option value="">-- Todos los jugadores --</option>
@@ -104,7 +105,7 @@ export default function ListaNiveles() {
               <button
                 onClick={() => {
                   setFiltroNombre("");
-                  setFiltorCreadorId("");
+                  setFiltroCreadorId("");
                 }}
                 className="w-full sm:w-auto px-4 py-3 bg-neutral-800 hover:bg-neutral-700 text-gray-300 rounded-xl text-sm font-semibold transition-all"
               >

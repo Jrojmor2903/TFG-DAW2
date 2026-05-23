@@ -14,9 +14,14 @@ class StoreNivelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre_nivel' => ['required', 'string', 'max:255'],
-            'dificultad' => ['required', 'integer', 'min:1'],
-            'fondo_url' => ['nullable', 'string', 'max:255'],
+            'nombre_nivel'        => ['required', 'string', 'max:255'],
+            'dificultad'          => ['required'],
+            'fondo_url'           => ['nullable', 'string', 'max:255'],
+            'id_creador'          => ['required', 'integer', 'exists:users,id'],
+            'tipo'                => ['nullable', 'string', 'in:historia,creado'],
+            'enemigos'            => ['required', 'array', 'min:1'],
+            'enemigos.*.id'       => ['required', 'exists:enemigos,id'],
+            'enemigos.*.cantidad' => ['required', 'integer', 'min:1'],
         ];
     }
 }
