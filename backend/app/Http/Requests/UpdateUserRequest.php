@@ -14,8 +14,6 @@ class UpdateUserRequest extends FormRequest
 
     public function rules(): array
     {
-        $userId = $this->user->id;
-
         return [
             'name'   => 'sometimes|string|max:255',
             'email' => [
@@ -24,11 +22,12 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user->id),
             ],
-            'avatar'   => 'nullable|image|max:2048',
-            'nombreImg' => 'nullable|string|max:255',
-            'password' => 'nullable|string|min:6|confirmed',
-            'rol'      => 'required|array',
-            'rol.*'    => 'exists:roles,id',
+            
+            'avatar_url' => 'nullable|string|url|max:2048', 
+            'nombreImg'  => 'nullable|string|max:255',
+            'password'   => 'nullable|string|min:6|confirmed',
+            'rol'        => 'required|array',
+            'rol.*'      => 'exists:roles,id',
         ];
     }
 }

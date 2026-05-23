@@ -16,7 +16,13 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
-
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'nivel_actual',
+        'avatar_url',
+    ];
 
 
     /**
@@ -66,17 +72,7 @@ class User extends Authenticatable
         return $this->roles()->where('slug', 'admin')->exists();
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'avatar_url',
-    ];
+
 
     /**
      * The attributes that should be hidden for serialization.

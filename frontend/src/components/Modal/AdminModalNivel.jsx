@@ -1,8 +1,7 @@
-// AdminModalNivel.jsx
 import { useState, useEffect } from "react";
 import api from "../axios/api";
 
-export function AdminModalNivel({ type, entity, onClose, onSave }) {
+export function AdminModalNivel({ type, entity, onClose, onSave, isSaving = false }) {
   const [enemigosDisponibles, setEnemigosDisponibles] = useState([]);
   const [enemigosSeleccionados, setEnemigosSeleccionados] = useState([]);
   const [loadingEnemigos, setLoadingEnemigos] = useState(true);
@@ -34,6 +33,7 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
   }, [entity]);
 
   const toggleEnemigo = (enemigo) => {
+    if (isSaving) return; // 🚀 Frena clics accidentales mientras se guarda
     const existe = enemigosSeleccionados.find(e => e.id === enemigo.id);
     if (existe) {
       setEnemigosSeleccionados(prev => prev.filter(e => e.id !== enemigo.id));
@@ -67,7 +67,15 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden relative">
+
+        {/* 🚀 CAPA DE CARGA Y BLOQUEO DEL FORMULARIO DE NIVELES */}
+        {isSaving && (
+          <div className="absolute inset-0 bg-neutral-950/60 backdrop-blur-xs z-50 flex flex-col items-center justify-center gap-3">
+            <div className="w-10 h-10 border-4 border-neutral-800 border-t-green-500 rounded-full animate-spin"></div>
+            <p className="text-green-400 font-mono text-xs tracking-widest uppercase animate-pulse">Compilando e inyectando nivel...</p>
+          </div>
+        )}
 
         {/* Cabecera */}
         <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-neutral-950">
@@ -76,7 +84,12 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
             {type === "crear" && "➕ Crear Nuevo"}
             {type === "editar" && "✏️ Editar"} Nivel
           </h2>
-          <button type="button" onClick={onClose} className="text-neutral-400 hover:text-white text-xl">
+          <button 
+            type="button" 
+            onClick={onClose} 
+            disabled={isSaving}
+            className="text-neutral-400 hover:text-white text-xl disabled:opacity-20"
+          >
             &times;
           </button>
         </div>
@@ -93,8 +106,9 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
                 name="nombre_nivel"
                 defaultValue={entity?.nombre_nivel || ""}
                 required
+                disabled={isSaving}
                 placeholder="Nombre del nivel..."
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white focus:outline-none transition-all"
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white focus:outline-none transition-all disabled:opacity-50"
               />
             )}
           </div>
@@ -108,7 +122,8 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
               <select
                 name="dificultad"
                 defaultValue={entity?.dificultad || "normal"}
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm text-white focus:outline-none transition-all"
+                disabled={isSaving}
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm text-white focus:outline-none transition-all disabled:opacity-50"
               >
                 <option value="facil">Fácil</option>
                 <option value="normal">Normal</option>
@@ -126,8 +141,9 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
               <input
                 name="fondo_url"
                 defaultValue={entity?.fondo_url || ""}
+                disabled={isSaving}
                 placeholder="https://..."
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white focus:outline-none transition-all"
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-green-500 rounded-xl p-3 text-sm font-mono text-white focus:outline-none transition-all disabled:opacity-50"
               />
             )}
           </div>
@@ -146,7 +162,9 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
                       <div
                         key={enemigo.id}
                         onClick={() => toggleEnemigo(enemigo)}
-                        className={`flex items-center gap-2 p-2 rounded-xl border cursor-pointer transition-all ${
+                        className={`flex items-center gap-2 p-2 rounded-xl border transition-all ${
+                          isSaving ? "opacity-30 pointer-events-none" : "cursor-pointer"
+                        } ${
                           seleccionado
                             ? "border-green-500 bg-green-500/10"
                             : "border-neutral-700 bg-black/30 opacity-50"
@@ -170,10 +188,11 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
                         type="number"
                         min="1"
                         max="100"
+                        disabled={isSaving}
                         value={e.cantidad}
                         onChange={(ev) => handleCantidad(e.id, ev.target.value)}
                         onClick={(ev) => ev.stopPropagation()}
-                        className="w-16 text-center rounded-lg bg-black/50 border border-neutral-700 text-white p-1 text-sm"
+                        className="w-16 text-center rounded-lg bg-black/50 border border-neutral-700 text-white p-1 text-sm disabled:opacity-50"
                       />
                     </div>
                   ))}
@@ -182,7 +201,6 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
             </div>
           )}
 
-          {/* Enemigos en modo ver */}
           {type === "ver" && entity?.enemigos?.length > 0 && (
             <div className="flex flex-col gap-2">
               <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Enemigos</label>
@@ -201,15 +219,17 @@ export function AdminModalNivel({ type, entity, onClose, onSave }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 bg-neutral-800 text-neutral-300 hover:text-white rounded-xl font-semibold text-sm"
+                disabled={isSaving}
+                className="px-5 py-2.5 bg-neutral-800 text-neutral-300 hover:text-white rounded-xl font-semibold text-sm disabled:opacity-50"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-black font-bold rounded-xl text-sm"
+                disabled={isSaving}
+                className="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-black font-bold rounded-xl text-sm disabled:opacity-50"
               >
-                Guardar Nivel
+                {isSaving ? "Guardando..." : "Guardar Nivel"}
               </button>
             </div>
           )}
