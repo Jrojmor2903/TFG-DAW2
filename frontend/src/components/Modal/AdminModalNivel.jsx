@@ -67,7 +67,7 @@ export function AdminModalNivel({
       nombre_nivel: formData.get("nombre_nivel"),
       dificultad:   Number(formData.get("dificultad")),
       fondo_url:    formData.get("fondo_url") || "https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/uploads/fondo-nivel.png",
-      id_usuario:   user?.id,   // ← directo del hook, sin pasar por FormData
+      id_creador:   user?.id,   // ← directo del hook, sin pasar por FormData
       tipo:         "historia",
       enemigos: enemigosSeleccionados.map((e) => ({
         id: e.id,
