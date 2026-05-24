@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../axios/api";
+import { useUser } from "../../hooks/useUser";
 
 export function AdminModalNivel({
   type,
@@ -8,6 +9,7 @@ export function AdminModalNivel({
   onSave,
   isSaving = false,
 }) {
+  const { user } = useUser();
   const [enemigosDisponibles, setEnemigosDisponibles] = useState([]);
   const [enemigosSeleccionados, setEnemigosSeleccionados] = useState([]);
   const [loadingEnemigos, setLoadingEnemigos] = useState(true);
@@ -67,6 +69,7 @@ export function AdminModalNivel({
       nombre_nivel: formData.get("nombre_nivel"),
       dificultad: formData.get("dificultad"),
       fondo_url: formData.get("fondo_url") || null,
+      id_usuario: Number(formData.get("id_usuario")), // ← nuevo
       tipo: "historia",
       enemigos: enemigosSeleccionados.map((e) => ({
         id: e.id,
@@ -76,7 +79,6 @@ export function AdminModalNivel({
 
     onSave(payload);
   };
-
   if (!type) return null;
 
   return (
@@ -272,6 +274,7 @@ export function AdminModalNivel({
             </div>
           )}
 
+          <input type="hidden" name="id_usuario" value={user?.id || ""} />
           {type !== "ver" && (
             <div className="flex justify-end gap-3 pt-4 border-t border-neutral-800/60 mt-6">
               <button
