@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import api from "../components/axios/api";
+import api, { validarToken } from "../components/axios/api";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext();
@@ -11,7 +11,8 @@ export function UserProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
+  const initAuth = async () => {
     try {
       const storedToken = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
@@ -19,20 +20,29 @@ export function UserProvider({ children }) {
       const storedTema = localStorage.getItem("tema_visual");
 
       if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-        setRoles(JSON.parse(storedRoles));
+        const esValido = await validarToken();
+
+        if (esValido) {
+          setToken(storedToken);
+          setUser(JSON.parse(storedUser));
+          setRoles(JSON.parse(storedRoles));
+        } else {
+          logout();
+        }
       }
 
       if (storedTema) {
         document.documentElement.style.setProperty("--tema-visual", storedTema);
       }
     } catch (err) {
-      setError("Error leyendo los datos del usuario : " + err);
+      setError("Error leyendo los datos del usuario: " + err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
+
+  initAuth();
+}, []);
 
   const login = (res) => {
     try {
@@ -100,16 +110,15 @@ async function updateAvatar(file) {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    // 🚀 Extracción limpia de la respuesta del servidor
+
     const nuevaUrl = res.data.avatar_url;
 
     const updatedUser = { 
       ...user, 
-      ...(res.data.data || {}), // Acoplamos el payload completo si viene mapeado
-      avatar_url: nuevaUrl      // Sobrescribimos con la URL final de S3/Supabase
+      ...(res.data.data || {}),
+      avatar_url: nuevaUrl
     };
 
-    // Actualizamos Estado y LocalStorage de manera síncrona
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   } catch (err) {
@@ -117,11 +126,11 @@ async function updateAvatar(file) {
   }
 }
 
-  // --- NUEVA FUNCIÓN AÑADIDA SIN ALTERAR EL RESTO ---
+
   async function equiparNave(nave) {
     if (!user) return;
 
-    // 1. Clonamos el estado del usuario mutando la nave de forma reactiva en el cliente
+
     const updatedUser = {
       ...user,
       perfil: {
@@ -131,14 +140,14 @@ async function updateAvatar(file) {
     };
 
     setUser(updatedUser);
-    // Sincronizamos en el LocalStorage para que persista al recargar la página
+
     localStorage.setItem("user", JSON.stringify(updatedUser));
 
     if (saving) return;
     saving = true;
 
     try {
-      // Ajusta este endpoint según la ruta que manejes en tu Laravel API
+
       await api.post("/user/equipar-nave", {
         nave_id: nave.id,
       });
@@ -159,7 +168,7 @@ async function updateAvatar(file) {
         logout,
         changeLevel,
         updateAvatar,
-        equiparNave, // Expuesta correctamente para ser consumida mediante useUser()
+        equiparNave,
         loading,
         error,
       }}

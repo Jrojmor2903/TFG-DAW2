@@ -9,15 +9,14 @@ export default function RutaAdmin({ children }) {
   const [isServerAdmin, setIsServerAdmin] = useState(false);
 
   useEffect(() => {
-    let isMounted = true; // Para evitar actualizaciones si el componente se desmonta
+    let control = true;
 
     async function verificarRolEnServidor() {
-      // Si el contexto de usuario está cargando, esperamos quietos
+
       if (contextLoading) return;
 
-      // Si el contexto terminó y NI SIQUIERA hay usuario, no es admin seguro
       if (!user) {
-        if (isMounted) {
+        if (control) {
           setIsServerAdmin(false);
           setVerificandoBackend(false);
         }
@@ -25,11 +24,11 @@ export default function RutaAdmin({ children }) {
       }
 
       try {
-        // Tu log nos dice que esta llamada devuelve un 200 con éxito
+
         const res = await api.get("/user/check-admin");
         
-        if (isMounted) {
-          // Validamos que el backend nos confirme la autorización
+        if (control) {
+
           if (res.data.success === true) {
             setIsServerAdmin(true);
           } else {
@@ -38,19 +37,18 @@ export default function RutaAdmin({ children }) {
         }
       } catch (err) {
         console.error("Error en la verificación de seguridad:", err);
-        if (isMounted) setIsServerAdmin(false);
+        if (control) setIsServerAdmin(false);
       } finally {
-        if (isMounted) setVerificandoBackend(false); // 👈 Marcamos que el backend HA TERMINADO
+        if (control) setVerificandoBackend(false);
       }
     }
 
     verificarRolEnServidor();
 
-    return () => { isMounted = false; };
+    return () => { control = false; };
   }, [user, contextLoading]);
 
-  // 1. MIENTRAS esté cargando el contexto OR el backend esté verificando, NO REDIRECCIONAMOS.
-  // Nos quedamos en esta pantalla de carga para darle tiempo a los estados a actualizarse.
+
   if (contextLoading || verificandoBackend) {
     return (
       <div className="min-h-screen bg-neutral-950 text-green-400 font-mono flex items-center justify-center">
@@ -59,12 +57,10 @@ export default function RutaAdmin({ children }) {
     );
   }
 
-  // 2. SOLO CUANDO ya terminó de comprobar todo, si el servidor dijo que NO es admin, se va fuera.
   if (!isServerAdmin) {
     console.log("Acceso denegado: Redireccionando al index");
     return <Navigate to="/" replace />;
   }
 
-  // 3. Si el servidor dio el OK (isServerAdmin === true), pintamos el panel limpio
   return children ? children : <Outlet />;
 }

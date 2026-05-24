@@ -23,12 +23,12 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
     
-    // ── fijas primero (sin parámetros) ──
+
     Route::get('users-deleted', [UserController::class, 'deletedUsers']);
     Route::get('user/check-admin', [UserController::class, 'checkAdmin']);
     Route::post('user/equipar-nave', [UserController::class, 'equiparNave']);
 
-    // ── con {id} después ──
+
     Route::post('users/{id}/restore', [UserController::class, 'restore']);
     Route::delete('users/{id}/force', [UserController::class, 'forceDelete']);
     Route::post('user/{id}/avatar', [UserController::class, 'updateAvatarProfile']);
@@ -36,7 +36,7 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
 
     Route::get('mis-logros/{id}', [UserController::class, 'misLogros']);
 
-    // ── apiResource al final ──
+
     Route::apiResource('user', UserController::class);
     
     Route::apiResource('rol', RolController::class);
@@ -53,9 +53,6 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('ranking', RankingController::class);
 
-
-    
-    
     Route::apiResource('nave', NaveController::class);
     
     Route::get('nivel/total', [NivelController::class, 'total']);

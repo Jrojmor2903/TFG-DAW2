@@ -5,18 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function ListaNiveles() {
   const [niveles, setNiveles] = useState([]);
-  const [creadores, setCreadores] = useState([]); // Para llenar el select de filtros
+  const [creadores, setCreadores] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  // Estados de los filtros
+
   const [filtroNombre, setFiltroNombre] = useState("");
-  const [filtroCreadorId, setFiltroCreadorId] = useState(""); // Guarda la ID, no el texto
+  const [filtroCreadorId, setFiltroCreadorId] = useState("");
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Traemos los niveles y los usuarios/creadores en paralelo
         const [resNiveles, resUsuarios] = await Promise.all([
           api.get("/nivel/creados"),
           api.get("/nivel/creadores"),
@@ -34,14 +33,14 @@ export default function ListaNiveles() {
     fetchData();
   }, []);
 
-  // 🔄 LÓGICA DE FILTRADO COMBINADO
+
   const nivelesFiltrados = niveles.filter((nivel) => {
-    // Filtro por texto del nombre del nivel
+
     const cumpleNombre = nivel.nombre_nivel
       ?.toLowerCase()
       .includes(filtroNombre.toLowerCase());
 
-    // Filtro por ID del Creador (Si no hay filtro seleccionado, pasan todos)
+
     const cumpleCreador = filtroCreadorId
       ? String(nivel.id_creador) === String(filtroCreadorId)
       : true;
@@ -54,19 +53,16 @@ export default function ListaNiveles() {
   return (
     <div className="background-general min-h-screen p-4 md:p-8 text-white w-full box-border overflow-x-hidden">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
-        {/* Cabecera */}
+
         <div className="text-center md:text-left">
           <h1 className="text-3xl md:text-5xl font-extrabold text-sh-tema tracking-widest uppercase">
             Niveles de la Comunidad
           </h1>
-          <p className="text-gray-400 text-sm mt-2">
-            Explora y filtra los desafíos creados por los jugadores
-          </p>
         </div>
 
-        {/* 🔍 BARRA DE FILTROS (Responsiva) */}
+
         <div className="bg-black/40 border border-gray-800 p-4 rounded-2xl flex flex-col sm:flex-row gap-4 w-full box-border">
-          {/* Input Buscador por texto */}
+   
           <div className="flex-1 flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               Buscar por Nivel
@@ -80,7 +76,6 @@ export default function ListaNiveles() {
             />
           </div>
 
-          {/* Selector por Creador (Muestra nombre, filtra por ID) */}
           <div className="w-full sm:w-64 flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               Filtrar por Jugador
@@ -99,7 +94,7 @@ export default function ListaNiveles() {
             </select>
           </div>
 
-          {/* Botón de limpiar filtros rápido */}
+
           {(filtroNombre || filtroCreadorId) && (
             <div className="flex items-end">
               <button
@@ -117,7 +112,6 @@ export default function ListaNiveles() {
 
         {error && <p className="text-red-400 text-center">{error}</p>}
 
-        {/* 🗺️ GRID DE NIVELES */}
         {nivelesFiltrados.length === 0 ? (
           <div className="text-center py-12 bg-black/20 border border-dashed border-gray-800 rounded-2xl">
             <p className="text-gray-500">
