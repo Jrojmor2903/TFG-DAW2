@@ -85,7 +85,7 @@ useEffect(() => {
   async function changeLevel(newLevel) {
     setUser((prev) => {
       const updated = { ...prev, nivel_actual: newLevel };
-      localStorage.setItem("user", JSON.stringify(updated)); // ← añade esto
+      localStorage.setItem("user", JSON.stringify(updated));
       return updated;
     });
 

@@ -2,21 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../components/axios/api";
 import { AdminModalNivel } from "../components/Modal/AdminModalNivel";
+import { AdminModalRanking } from "../components/Modal/AdminModalRanking";
 import AdminModal from "../components/Modal/AdminModal";
 
 const SECTIONS = {
   usuarios: {
     label: "Usuarios",
     endpoint: "/user",
-    columns: [
-      "id",
-      "name",
-      "email",
-      "password",
-      "nivel_actual",
-      "rol",
-      "avatar_url",
-    ],
+    columns: ["id", "name", "email", "password", "nivel_actual", "rol", "avatar_url"],
   },
   roles: {
     label: "Roles",
@@ -55,7 +48,6 @@ export default function AdminDashboard() {
   const [verPapelera, setVerPapelera] = useState(false);
   const [currentEntity, setCurrentEntity] = useState(null);
   const [modalType, setModalType] = useState(null);
-  // 🚀 NUEVO: Estado de carga para los modales
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -63,14 +55,11 @@ export default function AdminDashboard() {
       try {
         setLoading(true);
         let url = SECTIONS[activeTab].endpoint;
-        if (activeTab === "usuarios" && verPapelera) url = "/user/deleted";
+        if (activeTab === "usuarios" && verPapelera) url = "/users-deleted";
         const res = await api.get(url);
         setData(res.data.data || res.data || []);
       } catch (err) {
-        console.warn(
-          `El endpoint para ${activeTab} no está disponible:`,
-          err.message,
-        );
+        console.warn(`El endpoint para ${activeTab} no está disponible:`, err.message);
         setData([]);
       } finally {
         setLoading(false);
@@ -98,12 +87,7 @@ export default function AdminDashboard() {
   };
 
   const handleDelete = async (id) => {
-    if (
-      !window.confirm(
-        `¿Seguro que deseas eliminar este registro de ${activeTab}?`,
-      )
-    )
-      return;
+    if (!window.confirm(`¿Seguro que deseas eliminar este registro de ${activeTab}?`)) return;
     try {
       await api.delete(`${SECTIONS[activeTab].endpoint}/${id}`);
       setData((prev) => prev.filter((item) => item.id !== id));
@@ -123,8 +107,7 @@ export default function AdminDashboard() {
   };
 
   const handleForceDeleteUser = async (id) => {
-    if (!window.confirm("⚠️ ¿Deseas borrar permanentemente este usuario?"))
-      return;
+    if (!window.confirm("⚠️ ¿Deseas borrar permanentemente este usuario?")) return;
     try {
       await api.delete(`/user/${id}/force`);
       setData((prev) => prev.filter((item) => item.id !== id));
@@ -135,7 +118,7 @@ export default function AdminDashboard() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    setIsSaving(true); // 🚀 Activamos carga en el modal
+    setIsSaving(true);
     const formData = new FormData(e.target);
     const payload = {};
 
@@ -145,13 +128,7 @@ export default function AdminDashboard() {
         if (!payload[cleanKey]) payload[cleanKey] = [];
         if (value !== "") payload[cleanKey].push(Number(value) || value);
       } else {
-        if (
-          value !== "" &&
-          !isNaN(value) &&
-          key !== "email" &&
-          key !== "slug" &&
-          key !== "password"
-        ) {
+        if (value !== "" && !isNaN(value) && key !== "email" && key !== "slug" && key !== "password") {
           payload[key] = Number(value);
         } else {
           payload[key] = value === "" ? null : value;
@@ -170,14 +147,9 @@ export default function AdminDashboard() {
         setData((prev) => [...prev, res.data.data || res.data]);
         alert("Registro creado con éxito.");
       } else if (modalType === "editar") {
-        const res = await api.put(
-          `${SECTIONS[activeTab].endpoint}/${currentEntity.id}`,
-          payload,
-        );
+        const res = await api.put(`${SECTIONS[activeTab].endpoint}/${currentEntity.id}`, payload);
         setData((prev) =>
-          prev.map((item) =>
-            item.id === currentEntity.id ? res.data.data || res.data : item,
-          ),
+          prev.map((item) => item.id === currentEntity.id ? res.data.data || res.data : item)
         );
         alert("Registro actualizado con éxito.");
       }
@@ -186,12 +158,12 @@ export default function AdminDashboard() {
       const msg = err.response?.data?.message || "Error interno del servidor.";
       alert(`No se pudo procesar: ${msg}`);
     } finally {
-      setIsSaving(false); // 🚀 Desactivamos carga
+      setIsSaving(false);
     }
   };
 
   const handleSaveNivel = async (payload) => {
-    setIsSaving(true); // 🚀 Activamos carga en el modal de nivel
+    setIsSaving(true);
     try {
       if (modalType === "crear") {
         const res = await api.post("/nivel", payload);
@@ -200,9 +172,7 @@ export default function AdminDashboard() {
       } else if (modalType === "editar") {
         const res = await api.put(`/nivel/${currentEntity.id}`, payload);
         setData((prev) =>
-          prev.map((item) =>
-            item.id === currentEntity.id ? res.data.data || res.data : item,
-          ),
+          prev.map((item) => item.id === currentEntity.id ? res.data.data || res.data : item)
         );
         alert("Nivel actualizado con éxito.");
       }
@@ -211,7 +181,30 @@ export default function AdminDashboard() {
       const msg = err.response?.data?.message || "Error al guardar el nivel.";
       alert(`No se pudo procesar: ${msg}`);
     } finally {
-      setIsSaving(false); // 🚀 Desactivamos carga
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveRanking = async (payload) => {
+    setIsSaving(true);
+    try {
+      if (modalType === "crear") {
+        const res = await api.post("/ranking", payload);
+        setData((prev) => [...prev, res.data.data || res.data]);
+        alert("Ranking creado con éxito.");
+      } else if (modalType === "editar") {
+        const res = await api.put(`/ranking/${currentEntity.id}`, payload);
+        setData((prev) =>
+          prev.map((item) => item.id === currentEntity.id ? res.data.data || res.data : item)
+        );
+        alert("Ranking actualizado con éxito.");
+      }
+      setModalType(null);
+    } catch (err) {
+      const msg = err.response?.data?.message || "Error al guardar el ranking.";
+      alert(`No se pudo procesar: ${msg}`);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -226,6 +219,46 @@ export default function AdminDashboard() {
 
   const currentCols = SECTIONS[activeTab].columns;
 
+  const renderModal = () => {
+    if (!modalType) return null;
+
+    if (activeTab === "niveles") {
+      return (
+        <AdminModalNivel
+          type={modalType}
+          entity={currentEntity}
+          onClose={() => setModalType(null)}
+          onSave={handleSaveNivel}
+          isSaving={isSaving}
+        />
+      );
+    }
+
+    if (activeTab === "rankings") {
+      return (
+        <AdminModalRanking
+          type={modalType}
+          entity={currentEntity}
+          onClose={() => setModalType(null)}
+          onSave={handleSaveRanking}
+          isSaving={isSaving}
+        />
+      );
+    }
+
+    return (
+      <AdminModal
+        type={modalType}
+        entity={currentEntity}
+        columns={currentCols}
+        rolesBackend={rolesBackend}
+        onClose={() => setModalType(null)}
+        onSave={handleSave}
+        isSaving={isSaving}
+      />
+    );
+  };
+
   return (
     <div className="min-h-screen bg-neutral-950 text-white p-4 md:p-8 font-sans">
       {/* Encabezado */}
@@ -233,9 +266,7 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
             Panel de Control{" "}
-            <span className="text-[var(--tema-visual,rgb(34,197,94))]">
-              Admin
-            </span>
+            <span className="text-[var(--tema-visual,rgb(34,197,94))]">Admin</span>
           </h1>
         </div>
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -288,9 +319,7 @@ export default function AdminDashboard() {
           <thead>
             <tr className="bg-neutral-950 border-b border-neutral-800 text-neutral-400 text-xs md:text-sm font-semibold uppercase tracking-wider">
               {currentCols.map((col) => (
-                <th key={col} className="p-4">
-                  {col}
-                </th>
+                <th key={col} className="p-4">{col}</th>
               ))}
               <th className="p-4 text-center">Acciones</th>
             </tr>
@@ -309,10 +338,7 @@ export default function AdminDashboard() {
               </tr>
             ) : (
               data.map((item) => (
-                <tr
-                  key={item.id}
-                  className="hover:bg-neutral-900/30 transition-colors"
-                >
+                <tr key={item.id} className="hover:bg-neutral-900/30 transition-colors">
                   {currentCols.map((col) => (
                     <td
                       key={col}
@@ -320,24 +346,12 @@ export default function AdminDashboard() {
                     >
                       {col === "rol"
                         ? (() => {
-                            if (
-                              Array.isArray(item.roles) &&
-                              item.roles.length > 0
-                            )
-                              return item.roles
-                                .map((r) => r.nombre || r.name)
-                                .join(", ");
-                            if (
-                              Array.isArray(item.asignaciones) &&
-                              item.asignaciones.length > 0
-                            )
-                              return item.asignaciones
-                                .map((a) => a.rol?.nombre || `Rol #${a.rol_id}`)
-                                .join(", ");
+                            if (Array.isArray(item.roles) && item.roles.length > 0)
+                              return item.roles.map((r) => r.nombre || r.name).join(", ");
+                            if (Array.isArray(item.asignaciones) && item.asignaciones.length > 0)
+                              return item.asignaciones.map((a) => a.rol?.nombre || `Rol #${a.rol_id}`).join(", ");
                             if (item.rol && typeof item.rol === "object")
-                              return (
-                                item.rol.nombre || item.rol.name || "Asignado"
-                              );
+                              return item.rol.nombre || item.rol.name || "Asignado";
                             return "Sin Rol";
                           })()
                         : typeof item[col] === "object"
@@ -364,19 +378,13 @@ export default function AdminDashboard() {
                     ) : (
                       <>
                         <button
-                          onClick={() => {
-                            setCurrentEntity(item);
-                            setModalType("ver");
-                          }}
+                          onClick={() => { setCurrentEntity(item); setModalType("ver"); }}
                           className="px-2.5 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-semibold hover:bg-blue-500 hover:text-white transition-all"
                         >
                           Ver
                         </button>
                         <button
-                          onClick={() => {
-                            setCurrentEntity(item);
-                            setModalType("editar");
-                          }}
+                          onClick={() => { setCurrentEntity(item); setModalType("editar"); }}
                           className="px-2.5 py-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-lg text-xs font-semibold hover:bg-yellow-500 hover:text-white transition-all"
                         >
                           Editar
@@ -397,27 +405,7 @@ export default function AdminDashboard() {
         </table>
       </div>
 
-      {/* Modal CRUD */}
-      {modalType &&
-        (activeTab === "niveles" ? (
-          <AdminModalNivel
-            type={modalType}
-            entity={currentEntity}
-            onClose={() => setModalType(null)}
-            onSave={handleSaveNivel}
-            isSaving={isSaving} // 🚀 Pasa el estado real
-          />
-        ) : (
-          <AdminModal
-            type={modalType}
-            entity={currentEntity}
-            columns={currentCols}
-            rolesBackend={rolesBackend}
-            onClose={() => setModalType(null)}
-            onSave={handleSave}
-            isSaving={isSaving} // 🚀 Pasa el estado real
-          />
-        ))}
+      {renderModal()}
     </div>
   );
 }

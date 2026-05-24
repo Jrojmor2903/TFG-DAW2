@@ -1,6 +1,8 @@
 import api from "../components/axios/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
+import LoadingPage from "../components/Loading/LoadingPage";
 
 function Register() {
   const [name, setName] = useState("");
@@ -8,7 +10,9 @@ function Register() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +23,7 @@ function Register() {
       return;
     }
 
+    setLoading(true);
     try {
       await api.post("/register", {
         name,
@@ -28,7 +33,9 @@ function Register() {
         rol: [2],
       });
 
-      navigate("/login");
+      const res = await api.post("/login", { email, password });
+      login(res);
+      navigate("/");
 
     } catch (err) {
       const errores = err.response?.data?.errors;
@@ -37,8 +44,12 @@ function Register() {
       } else {
         setError("Error al registrarse. Inténtalo de nuevo.");
       }
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return <LoadingPage />;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen background-general">

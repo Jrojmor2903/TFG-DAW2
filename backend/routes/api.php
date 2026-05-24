@@ -21,7 +21,6 @@ use App\Http\Controllers\Api\EnemigoController;
 
 Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('me', [AuthController::class, 'me']);
     
 
     Route::get('users-deleted', [UserController::class, 'deletedUsers']);
@@ -33,7 +32,6 @@ Route::name("api.")->middleware('auth:sanctum')->group(function () {
     Route::delete('users/{id}/force', [UserController::class, 'forceDelete']);
     Route::post('user/{id}/avatar', [UserController::class, 'updateAvatarProfile']);
     Route::patch('user/{id}/nivel', [UserController::class, 'actualizarNivel']);
-
     Route::get('mis-logros/{id}', [UserController::class, 'misLogros']);
 
 
