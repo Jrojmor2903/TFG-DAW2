@@ -68,7 +68,7 @@ export function AdminModalNivel({
     const payload = {
       nombre_nivel: formData.get("nombre_nivel"),
       dificultad: formData.get("dificultad"),
-      fondo_url: formData.get("fondo_url") || null,
+      fondo_url: formData.get("fondo_url") || "https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/uploads/fondo-nivel.png",
       id_usuario: Number(formData.get("id_usuario")), // ← nuevo
       tipo: "historia",
       enemigos: enemigosSeleccionados.map((e) => ({
