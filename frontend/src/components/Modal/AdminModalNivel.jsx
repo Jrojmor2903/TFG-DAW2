@@ -41,12 +41,10 @@ export function AdminModalNivel({
   }, [entity]);
 
   const toggleEnemigo = (enemigo) => {
-    if (isSaving) return; // 🚀 Frena clics accidentales mientras se guarda
+    if (isSaving) return;
     const existe = enemigosSeleccionados.find((e) => e.id === enemigo.id);
     if (existe) {
-      setEnemigosSeleccionados((prev) =>
-        prev.filter((e) => e.id !== enemigo.id),
-      );
+      setEnemigosSeleccionados((prev) => prev.filter((e) => e.id !== enemigo.id));
     } else {
       setEnemigosSeleccionados((prev) => [
         ...prev,
@@ -67,24 +65,26 @@ export function AdminModalNivel({
 
     const payload = {
       nombre_nivel: formData.get("nombre_nivel"),
-      dificultad: formData.get("dificultad"),
-      fondo_url: formData.get("fondo_url") || "https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/uploads/fondo-nivel.png",
-      id_usuario: Number(formData.get("id_usuario")), // ← nuevo
-      tipo: "historia",
+      dificultad:   Number(formData.get("dificultad")),
+      fondo_url:    formData.get("fondo_url") || "https://qifdqcldqkpzmhyswsjx.supabase.co/storage/v1/object/public/TFG-Bucket/uploads/fondo-nivel.png",
+      id_usuario:   user?.id,   // ← directo del hook, sin pasar por FormData
+      tipo:         "historia",
       enemigos: enemigosSeleccionados.map((e) => ({
         id: e.id,
         cantidad: e.cantidad,
       })),
     };
 
+    console.log("Payload nivel:", payload); // ← verifica que id_usuario no sea undefined
     onSave(payload);
   };
+
   if (!type) return null;
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden relative">
-        {/* 🚀 CAPA DE CARGA Y BLOQUEO DEL FORMULARIO DE NIVELES */}
+
         {isSaving && (
           <div className="absolute inset-0 bg-neutral-950/60 backdrop-blur-xs z-50 flex flex-col items-center justify-center gap-3">
             <div className="w-10 h-10 border-4 border-neutral-800 border-t-green-500 rounded-full animate-spin"></div>
@@ -97,8 +97,8 @@ export function AdminModalNivel({
         {/* Cabecera */}
         <div className="p-6 border-b border-neutral-800 flex justify-between items-center bg-neutral-950">
           <h2 className="text-xl font-bold uppercase tracking-wider">
-            {type === "ver" && "👁️ Detalles del"}
-            {type === "crear" && "➕ Crear Nuevo"}
+            {type === "ver"    && "👁️ Detalles del"}
+            {type === "crear"  && "➕ Crear Nuevo"}
             {type === "editar" && "✏️ Editar"} Nivel
           </h2>
           <button
@@ -143,7 +143,7 @@ export function AdminModalNivel({
             </label>
             {type === "ver" ? (
               <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-sm font-mono text-neutral-300">
-                {entity?.dificultad}
+                {{ 1: "Fácil", 2: "Normal", 3: "Difícil", 4: "Extremo" }[entity?.dificultad] ?? entity?.dificultad}
               </div>
             ) : (
               <select
@@ -166,10 +166,8 @@ export function AdminModalNivel({
               Fondo URL
             </label>
             {type === "ver" ? (
-              <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-sm font-mono text-neutral-300">
-                {{ 1: "Fácil", 2: "Normal", 3: "Difícil", 4: "Extremo" }[
-                  entity?.dificultad
-                ] ?? entity?.dificultad}
+              <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-sm font-mono text-neutral-300 truncate">
+                {entity?.fondo_url || "N/A"}
               </div>
             ) : (
               <input
@@ -182,30 +180,24 @@ export function AdminModalNivel({
             )}
           </div>
 
-          {/* Enemigos */}
+          {/* Enemigos selector */}
           {type !== "ver" && (
             <div className="flex flex-col gap-3">
               <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
                 Enemigos del nivel
               </label>
               {loadingEnemigos ? (
-                <p className="text-neutral-500 text-sm animate-pulse">
-                  Cargando enemigos...
-                </p>
+                <p className="text-neutral-500 text-sm animate-pulse">Cargando enemigos...</p>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   {enemigosDisponibles.map((enemigo) => {
-                    const seleccionado = enemigosSeleccionados.find(
-                      (e) => e.id === enemigo.id,
-                    );
+                    const seleccionado = enemigosSeleccionados.find((e) => e.id === enemigo.id);
                     return (
                       <div
                         key={enemigo.id}
                         onClick={() => toggleEnemigo(enemigo)}
                         className={`flex items-center gap-2 p-2 rounded-xl border transition-all ${
-                          isSaving
-                            ? "opacity-30 pointer-events-none"
-                            : "cursor-pointer"
+                          isSaving ? "opacity-30 pointer-events-none" : "cursor-pointer"
                         } ${
                           seleccionado
                             ? "border-green-500 bg-green-500/10"
@@ -228,17 +220,13 @@ export function AdminModalNivel({
 
               {enemigosSeleccionados.length > 0 && (
                 <div className="flex flex-col gap-2 mt-1">
-                  <label className="text-xs text-neutral-500">
-                    Cantidad a derrotar:
-                  </label>
+                  <label className="text-xs text-neutral-500">Cantidad a derrotar:</label>
                   {enemigosSeleccionados.map((e) => (
                     <div
                       key={e.id}
                       className="flex items-center justify-between gap-3 bg-black/20 p-2 rounded-xl border border-neutral-800"
                     >
-                      <span className="text-white text-xs truncate">
-                        {e.nombre}
-                      </span>
+                      <span className="text-white text-xs truncate">{e.nombre}</span>
                       <input
                         type="number"
                         min="1"
@@ -256,6 +244,7 @@ export function AdminModalNivel({
             </div>
           )}
 
+          {/* Enemigos modo ver */}
           {type === "ver" && entity?.enemigos?.length > 0 && (
             <div className="flex flex-col gap-2">
               <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
@@ -274,7 +263,6 @@ export function AdminModalNivel({
             </div>
           )}
 
-          <input type="hidden" name="id_usuario" value={user?.id || ""} />
           {type !== "ver" && (
             <div className="flex justify-end gap-3 pt-4 border-t border-neutral-800/60 mt-6">
               <button
